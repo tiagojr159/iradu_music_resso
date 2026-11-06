@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <org.schabi.newpipe.views.ScrollableTabLayout
+        android:id="@+id/main_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/main_queue_button"
+        android:background="#050409"
+        app:tabRippleColor="@color/white"
+        app:tabIconTint="#FF0A7A"
+        app:tabIndicatorColor="#FF0A7A"
+        app:tabGravity="fill"
+        app:tabIndicatorFullWidth="false"
+        app:tabInlineLabel="false"
+        app:tabMinWidth="60dp" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/main_queue_button"
+        android:layout_width="58dp"
+        android:layout_height="72dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="#050409"
+        android:contentDescription="@string/title_activity_play_queue"
+        android:padding="17dp"
+        android:src="@drawable/ic_list"
+        app:tint="#FF0A7A" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_tab_layout" />
+
+</RelativeLayout>

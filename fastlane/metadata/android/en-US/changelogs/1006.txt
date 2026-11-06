@@ -1,0 +1,11 @@
+﻿[Iradu Music]
+
+Updated:
+â€¢ merged latest changes from Iradu Music's master branch
+
+Improved:
+â€¢ SponsorBlock segment rating buttons (thumbs up/down) now highlight when tapped
+
+Added:
+â€¢ added "Show kiosks in drawer" toggle in Settings -> Appearance
+â€¢ added "inv.nadeko.net" to the invidious instances list

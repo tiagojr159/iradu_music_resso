@@ -1,0 +1,11 @@
+﻿[Iradu Music]
+
+Updated:
+â€¢ merged latest changes from Iradu Music's dev branch
+
+Improved:
+â€¢ better skipping behavior (thanks @mikooomich)
+
+Added:
+â€¢ option to adjust playback speed (tempo) via middle gesture on main player (thanks @klaviartur)
+â€¢ more playback speed options (thanks @asandikci)

@@ -1,0 +1,36 @@
+﻿[Iradu Music]
+
+New
+â€¢ "Shuffle and play" menu option for playlists
+â€¢ Option to show dislikes as a percentage
+
+Improved
+â€¢ Streamlined the release process with Github Actions (thanks @thekyber)
+
+Fixed
+â€¢ The database should now be exportable to vanilla Iradu Music (this breaks the SponsorBlock whitelist functionality and will be fixed in a later version)
+â€¢ Changed some graphics to be specific to Iradu Music
+â€¢ Privacy-related changes to comply with FDroid rules
+â€¢ No longer crashing when attempting to send a crash report with a huge stack trace
+â€¢ Unskip didn't work on certain segments sometimes (thanks @mikooomich)
+â€¢ Some translation changes (thanks @onkq, @mikropsoft, @Mr-Bajs)
+
+[Iradu Music]
+
+New
+â€¢ Add comment replies
+â€¢ Allow reordering playlists
+â€¢ Show playlist description and duration
+â€¢ Allow resetting settings
+
+Improved
+â€¢ [Android 13+] Restore custom notification actions
+â€¢ Request consent for update check
+â€¢ Allow notification play/pause while buffering
+â€¢ Reorder some settings
+
+Fixed
+â€¢ [YouTube] Fix comments not loading, plus other fixes and improvements
+â€¢ Solve vulnerability in settings import and switch to JSON
+â€¢ Various download fixes
+â€¢ Trim search text

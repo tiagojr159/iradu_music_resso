@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="164dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="14dp"
+    android:background="@drawable/resso_surface_panel"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/music_card_image"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:background="@drawable/resso_card_background"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/music_card_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxLines="2"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/music_card_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        android:textColor="#B8B4C7"
+        android:textSize="13sp" />
+</LinearLayout>

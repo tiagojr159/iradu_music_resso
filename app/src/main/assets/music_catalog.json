@@ -1,0 +1,555 @@
+{
+  "title": "Iradu resso",
+  "featured": ["top-brasil", "top-global", "viral-hits", "lancamentos"],
+  "genrePlaylists": ["top-brasil", "top-global", "viral-hits", "lancamentos", "indie", "rock", "hip-hop", "k-pop", "sertanejo", "gospel"],
+  "moodPlaylists": ["relax", "happy", "workout", "party", "focus", "romantic", "sad", "road-trip", "sleep"],
+  "automaticPlaylists": ["daily-mix", "descobertas-da-semana", "novidades-para-voce", "tocadas-recentemente", "favoritas"],
+  "playlists": [
+    {
+      "slug": "top-brasil",
+      "title": "Top Brasil",
+      "subtitle": "O que mais toca agora",
+      "description": "Hits brasileiros, funk pop e refrões que estão dominando o momento.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Envolver", "artist": "Anitta", "album": "Versions", "duration": "3:14", "youtubeId": "hFCjGiawJi4"},
+        {"title": "Leao", "artist": "Marilia Mendonca", "album": "Ao Vivo", "duration": "2:52", "youtubeId": "0mL1NQ1z0wI"},
+        {"title": "Nosso Quadro", "artist": "Ana Castela", "album": "Boiadeira", "duration": "2:43", "youtubeId": "dQw4w9WgXcQ"},
+        {"title": "Malvada", "artist": "Zé Felipe", "album": "Singles", "duration": "2:27", "youtubeId": "09R8_2nJtjg"}
+      ]
+    },
+    {
+      "slug": "top-global",
+      "title": "Top Global",
+      "subtitle": "Gigantes do mundo inteiro",
+      "description": "Uma fila de hits globais com pop, dance e refrões que todo mundo reconhece.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Shape of You", "artist": "Ed Sheeran", "album": "Divide", "duration": "3:53", "youtubeId": "JGwWNGJdvx8"},
+        {"title": "Blinding Lights", "artist": "The Weeknd", "album": "After Hours", "duration": "3:20", "youtubeId": "4NRXx6U8ABQ"},
+        {"title": "Perfect", "artist": "Ed Sheeran", "album": "Divide", "duration": "4:23", "youtubeId": "2Vv-BfVoq4g"},
+        {"title": "Despacito", "artist": "Luis Fonsi", "album": "Vida", "duration": "4:41", "youtubeId": "kJQP7kiw5Fk"}
+      ]
+    },
+    {
+      "slug": "viral-hits",
+      "title": "Viral Hits",
+      "subtitle": "As mais compartilhadas",
+      "description": "Músicas que explodiram em vídeos curtos, trends e playlists rápidas.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Calm Down", "artist": "Rema", "album": "Rave & Roses", "duration": "3:39", "youtubeId": "WcIcVapfqXw"},
+        {"title": "Flowers", "artist": "Miley Cyrus", "album": "Endless Summer Vacation", "duration": "3:21", "youtubeId": "G7KNmW9a75Y"},
+        {"title": "As It Was", "artist": "Harry Styles", "album": "Harry's House", "duration": "2:48", "youtubeId": "H5v3kku4y6Q"},
+        {"title": "Cupid", "artist": "FIFTY FIFTY", "album": "The Beginning", "duration": "2:55", "youtubeId": "Qc7_zRjH808"}
+      ]
+    },
+    {
+      "slug": "lancamentos",
+      "title": "Lançamentos",
+      "subtitle": "Novidades fresquinhas",
+      "description": "Faixas novas para atualizar a biblioteca com som fresco o dia inteiro.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "greedy", "artist": "Tate McRae", "album": "Think Later", "duration": "2:11", "youtubeId": "To4SWGZkEPk"},
+        {"title": "Paint The Town Red", "artist": "Doja Cat", "album": "Scarlet", "duration": "3:52", "youtubeId": "m4_9TFeMfJE"},
+        {"title": "Espresso", "artist": "Sabrina Carpenter", "album": "Short n' Sweet", "duration": "2:56", "youtubeId": "eVli-tstM5E"},
+        {"title": "Please Please Please", "artist": "Sabrina Carpenter", "album": "Short n' Sweet", "duration": "3:06", "youtubeId": "cF1Na4AIecM"}
+      ]
+    },
+    {
+      "slug": "indie",
+      "title": "Indie",
+      "subtitle": "Texturas e climas alternativos",
+      "description": "Guitarras delicadas, synths nostálgicos e um mood mais contemplativo.",
+      "accentColor": "#D955C8",
+      "songs": [
+        {"title": "Sweater Weather", "artist": "The Neighbourhood", "album": "I Love You.", "duration": "4:12", "youtubeId": "GCdwKhTtNNw"},
+        {"title": "Midnight City", "artist": "M83", "album": "Hurry Up, We're Dreaming", "duration": "4:04", "youtubeId": "dX3k_QDnzHE"},
+        {"title": "Somebody Else", "artist": "The 1975", "album": "I Like It When You Sleep", "duration": "5:47", "youtubeId": "Bimd2nZirT4"},
+        {"title": "Do I Wanna Know?", "artist": "Arctic Monkeys", "album": "AM", "duration": "4:32", "youtubeId": "bpOSxM0rNPM"}
+      ]
+    },
+    {
+      "slug": "rock",
+      "title": "Rock",
+      "subtitle": "Peso, riffs e nostalgia",
+      "description": "Rock clássico e alternativo para levantar o volume e seguir em frente.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Smells Like Teen Spirit", "artist": "Nirvana", "album": "Nevermind", "duration": "5:01", "youtubeId": "hTWKbfoikeg"},
+        {"title": "Radioactive", "artist": "Imagine Dragons", "album": "Night Visions", "duration": "3:07", "youtubeId": "ktvTqknDobU"},
+        {"title": "Believer", "artist": "Imagine Dragons", "album": "Evolve", "duration": "3:24", "youtubeId": "7wtfhZwyrcc"},
+        {"title": "In The End", "artist": "Linkin Park", "album": "Hybrid Theory", "duration": "3:36", "youtubeId": "eVTXPUF4Oz4"}
+      ]
+    },
+    {
+      "slug": "hip-hop",
+      "title": "Hip-Hop",
+      "subtitle": "Beat pesado e presença",
+      "description": "Flow, atitude e graves fortes para entrar no ritmo certo.",
+      "accentColor": "#A73CFF",
+      "songs": [
+        {"title": "God's Plan", "artist": "Drake", "album": "Scorpion", "duration": "3:19", "youtubeId": "xpVfcZ0ZcFM"},
+        {"title": "HUMBLE.", "artist": "Kendrick Lamar", "album": "DAMN.", "duration": "2:57", "youtubeId": "tvTRZJ-4EyI"},
+        {"title": "SICKO MODE", "artist": "Travis Scott", "album": "ASTROWORLD", "duration": "5:13", "youtubeId": "6ONRf7h3Mdk"},
+        {"title": "Without Me", "artist": "Eminem", "album": "The Eminem Show", "duration": "4:51", "youtubeId": "YVkUvmDQ3HY"}
+      ]
+    },
+    {
+      "slug": "k-pop",
+      "title": "K-Pop",
+      "subtitle": "Coreografias e refrões gigantes",
+      "description": "Uma seleção viciante de grupos enormes e produção brilhante.",
+      "accentColor": "#FF62C5",
+      "songs": [
+        {"title": "Dynamite", "artist": "BTS", "album": "BE", "duration": "3:19", "youtubeId": "gdZLi9oWNZg"},
+        {"title": "How You Like That", "artist": "BLACKPINK", "album": "The Album", "duration": "3:03", "youtubeId": "ioNng23DkIM"},
+        {"title": "Cupid", "artist": "FIFTY FIFTY", "album": "The Beginning", "duration": "2:55", "youtubeId": "Qc7_zRjH808"},
+        {"title": "OMG", "artist": "NewJeans", "album": "OMG", "duration": "3:33", "youtubeId": "_ZAgIHmHLdc"}
+      ]
+    },
+    {
+      "slug": "sertanejo",
+      "title": "Sertanejo",
+      "subtitle": "Sofrência e refrão alto",
+      "description": "Modão, piseiro e os refrões que o Brasil canta sem pensar duas vezes.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Todo Mundo Menos Você", "artist": "Marília Mendonça", "album": "Ao Vivo", "duration": "3:07", "youtubeId": "OPf0YbXqDm0"},
+        {"title": "Arruma Um Bão", "artist": "Israel & Rodolffo", "album": "Let's Bora", "duration": "2:39", "youtubeId": "60ItHLz5WEA"},
+        {"title": "Erro Gostoso", "artist": "Simone Mendes", "album": "Cintilante", "duration": "2:43", "youtubeId": "3JZ_D3ELwOQ"},
+        {"title": "Oi Balde", "artist": "Zé Neto & Cristiano", "album": "Ao Vivo", "duration": "2:51", "youtubeId": "fRh_vgS2dFE"}
+      ]
+    },
+    {
+      "slug": "gospel",
+      "title": "Gospel",
+      "subtitle": "Fé, paz e energia boa",
+      "description": "Canções de adoração e letras que trazem serenidade para o dia.",
+      "accentColor": "#C74FFF",
+      "songs": [
+        {"title": "A Casa É Sua", "artist": "Casa Worship", "album": "Ao Vivo", "duration": "5:08", "youtubeId": "CevxZvSJLk8"},
+        {"title": "Ninguém Explica Deus", "artist": "Preto no Branco", "album": "Preto no Branco", "duration": "4:31", "youtubeId": "YQHsXMglC9A"},
+        {"title": "Lugar Secreto", "artist": "Gabriela Rocha", "album": "Ao Vivo", "duration": "7:05", "youtubeId": "LXb3EKWsInQ"},
+        {"title": "Todavia Me Alegrarei", "artist": "Samuel Messias", "album": "Todavia Me Alegrarei", "duration": "5:07", "youtubeId": "pRpeEdMmmQ0"}
+      ]
+    },
+    {
+      "slug": "relax",
+      "title": "Relax",
+      "subtitle": "Baixe o ritmo",
+      "description": "Uma seleção calma para desacelerar, respirar e deixar o ambiente leve.",
+      "accentColor": "#8858FF",
+      "songs": [
+        {"title": "Ocean Eyes", "artist": "Billie Eilish", "album": "dont smile at me", "duration": "3:20", "youtubeId": "viimfQi_pUw"},
+        {"title": "Photograph", "artist": "Ed Sheeran", "album": "x", "duration": "4:19", "youtubeId": "nSDgHBxUbVQ"},
+        {"title": "Yellow", "artist": "Coldplay", "album": "Parachutes", "duration": "4:29", "youtubeId": "yKNxeF4KMsY"},
+        {"title": "Stay Alive", "artist": "Jung Kook", "album": "Stay Alive", "duration": "3:31", "youtubeId": "yzjTpCgfIII"}
+      ]
+    },
+    {
+      "slug": "happy",
+      "title": "Happy",
+      "subtitle": "Músicas para sorrir",
+      "description": "Batidas solares, refrões fáceis e uma energia leve para o dia render.",
+      "accentColor": "#FF6BCB",
+      "songs": [
+        {"title": "Happy", "artist": "Pharrell Williams", "album": "G I R L", "duration": "3:53", "youtubeId": "ZbZSe6N_BXs"},
+        {"title": "Can't Stop The Feeling!", "artist": "Justin Timberlake", "album": "Trolls", "duration": "3:56", "youtubeId": "ru0K8uYEZWw"},
+        {"title": "Roar", "artist": "Katy Perry", "album": "PRISM", "duration": "4:30", "youtubeId": "CevxZvSJLk8"},
+        {"title": "Firework", "artist": "Katy Perry", "album": "Teenage Dream", "duration": "3:48", "youtubeId": "QGJuMBdaqIw"}
+      ]
+    },
+    {
+      "slug": "workout",
+      "title": "Workout",
+      "subtitle": "Pressão para treinar",
+      "description": "Faixas com explosão, BPM alto e energia para manter o treino aceso.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Titanium", "artist": "David Guetta", "album": "Nothing but the Beat", "duration": "4:06", "youtubeId": "JRfuAukYTKg"},
+        {"title": "Stronger", "artist": "Kanye West", "album": "Graduation", "duration": "5:12", "youtubeId": "PsO6ZnUZI0g"},
+        {"title": "Believer", "artist": "Imagine Dragons", "album": "Evolve", "duration": "3:24", "youtubeId": "7wtfhZwyrcc"},
+        {"title": "Faded", "artist": "Alan Walker", "album": "Different World", "duration": "3:33", "youtubeId": "60ItHLz5WEA"}
+      ]
+    },
+    {
+      "slug": "party",
+      "title": "Party",
+      "subtitle": "Sem deixar a pista cair",
+      "description": "Clima de festa com pop, dance e batidas prontas para tocar alto.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Uptown Funk", "artist": "Mark Ronson ft. Bruno Mars", "album": "Uptown Special", "duration": "4:31", "youtubeId": "OPf0YbXqDm0"},
+        {"title": "I Gotta Feeling", "artist": "Black Eyed Peas", "album": "The E.N.D.", "duration": "4:50", "youtubeId": "uSD4vsh1zDA"},
+        {"title": "Party Rock Anthem", "artist": "LMFAO", "album": "Sorry for Party Rocking", "duration": "6:16", "youtubeId": "KQ6zr6kCPj8"},
+        {"title": "Wake Me Up", "artist": "Avicii", "album": "True", "duration": "4:33", "youtubeId": "IcrbM1l_BoI"}
+      ]
+    },
+    {
+      "slug": "focus",
+      "title": "Focus",
+      "subtitle": "Entrar no estado de fluxo",
+      "description": "Sons limpos, menos distração e uma cadência boa para estudar ou produzir.",
+      "accentColor": "#8C63FF",
+      "songs": [
+        {"title": "A Sky Full of Stars", "artist": "Coldplay", "album": "Ghost Stories", "duration": "4:28", "youtubeId": "VPRjCeoBqrI"},
+        {"title": "Sunflower", "artist": "Post Malone", "album": "Hollywood's Bleeding", "duration": "2:38", "youtubeId": "ApXoWvfEYVU"},
+        {"title": "Adventure of a Lifetime", "artist": "Coldplay", "album": "A Head Full of Dreams", "duration": "4:24", "youtubeId": "QtXby3twMmI"},
+        {"title": "Night Changes", "artist": "One Direction", "album": "FOUR", "duration": "3:47", "youtubeId": "syFZfO_wfMQ"}
+      ]
+    },
+    {
+      "slug": "romantic",
+      "title": "Romantic",
+      "subtitle": "Clima de declaração",
+      "description": "Baladas e refrões suaves para trilhar uma noite mais íntima.",
+      "accentColor": "#FF5DBB",
+      "songs": [
+        {"title": "All of Me", "artist": "John Legend", "album": "Love in the Future", "duration": "4:30", "youtubeId": "450p7goxZqg"},
+        {"title": "Thinking Out Loud", "artist": "Ed Sheeran", "album": "x", "duration": "4:57", "youtubeId": "lp-EO5I60KA"},
+        {"title": "Perfect", "artist": "Ed Sheeran", "album": "Divide", "duration": "4:23", "youtubeId": "2Vv-BfVoq4g"},
+        {"title": "A Thousand Years", "artist": "Christina Perri", "album": "Lovestrong", "duration": "4:45", "youtubeId": "rtOvBOTyX00"}
+      ]
+    },
+    {
+      "slug": "sad",
+      "title": "Sad",
+      "subtitle": "Dias mais silenciosos",
+      "description": "Uma seleção melancólica, bonita e bem costurada para processar o momento.",
+      "accentColor": "#7A6BFF",
+      "songs": [
+        {"title": "Someone Like You", "artist": "Adele", "album": "21", "duration": "4:45", "youtubeId": "hLQl3WQQoQ0"},
+        {"title": "drivers license", "artist": "Olivia Rodrigo", "album": "SOUR", "duration": "4:02", "youtubeId": "ZmDBbnmKpqQ"},
+        {"title": "When I Was Your Man", "artist": "Bruno Mars", "album": "Unorthodox Jukebox", "duration": "3:54", "youtubeId": "ekzHIouo8Q4"},
+        {"title": "Hello", "artist": "Adele", "album": "25", "duration": "6:07", "youtubeId": "YQHsXMglC9A"}
+      ]
+    },
+    {
+      "slug": "road-trip",
+      "title": "Road Trip",
+      "subtitle": "Estrada, janela e volume",
+      "description": "Músicas abertas, cantáveis e com energia boa para seguir em movimento.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Shut Up and Dance", "artist": "WALK THE MOON", "album": "Talking Is Hard", "duration": "3:19", "youtubeId": "6JCLY0Rlx6Q"},
+        {"title": "Counting Stars", "artist": "OneRepublic", "album": "Native", "duration": "4:44", "youtubeId": "hT_nvWreIhg"},
+        {"title": "Wake Me Up", "artist": "Avicii", "album": "True", "duration": "4:33", "youtubeId": "IcrbM1l_BoI"},
+        {"title": "The Nights", "artist": "Avicii", "album": "Stories", "duration": "2:56", "youtubeId": "UtF6Jej8yb4"}
+      ]
+    },
+    {
+      "slug": "sleep",
+      "title": "Sleep",
+      "subtitle": "Encerrar o dia",
+      "description": "Faixas mais suaves para desacelerar, apagar as luzes e deixar a noite acontecer.",
+      "accentColor": "#856DFF",
+      "songs": [
+        {"title": "lovely", "artist": "Billie Eilish & Khalid", "album": "Singles", "duration": "3:21", "youtubeId": "V1Pl8CzNzCw"},
+        {"title": "Let Her Go", "artist": "Passenger", "album": "All The Little Lights", "duration": "4:15", "youtubeId": "RBumgq5yVrA"},
+        {"title": "Say You Won't Let Go", "artist": "James Arthur", "album": "Back from the Edge", "duration": "3:31", "youtubeId": "0yW7w8F2TVA"},
+        {"title": "Chasing Cars", "artist": "Snow Patrol", "album": "Eyes Open", "duration": "4:28", "youtubeId": "GemKqzILV4w"}
+      ]
+    },
+    {
+      "slug": "daily-mix",
+      "title": "Daily Mix",
+      "subtitle": "Seu giro principal",
+      "description": "Uma mistura de pop, Brasil e batidas virais para começar o dia sem esforço.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Blinding Lights", "artist": "The Weeknd", "album": "After Hours", "duration": "3:20", "youtubeId": "4NRXx6U8ABQ"},
+        {"title": "Envolver", "artist": "Anitta", "album": "Versions", "duration": "3:14", "youtubeId": "hFCjGiawJi4"},
+        {"title": "Flowers", "artist": "Miley Cyrus", "album": "Endless Summer Vacation", "duration": "3:21", "youtubeId": "G7KNmW9a75Y"},
+        {"title": "Believer", "artist": "Imagine Dragons", "album": "Evolve", "duration": "3:24", "youtubeId": "7wtfhZwyrcc"}
+      ]
+    },
+    {
+      "slug": "descobertas-da-semana",
+      "title": "Descobertas da Semana",
+      "subtitle": "Achados que combinam com você",
+      "description": "Faixas escolhidas para te tirar do óbvio sem perder o clima da sua conta.",
+      "accentColor": "#D955C8",
+      "songs": [
+        {"title": "Midnight City", "artist": "M83", "album": "Hurry Up, We're Dreaming", "duration": "4:04", "youtubeId": "dX3k_QDnzHE"},
+        {"title": "Calm Down", "artist": "Rema", "album": "Rave & Roses", "duration": "3:39", "youtubeId": "WcIcVapfqXw"},
+        {"title": "OMG", "artist": "NewJeans", "album": "OMG", "duration": "3:33", "youtubeId": "_ZAgIHmHLdc"},
+        {"title": "A Sky Full of Stars", "artist": "Coldplay", "album": "Ghost Stories", "duration": "4:28", "youtubeId": "VPRjCeoBqrI"}
+      ]
+    },
+    {
+      "slug": "novidades-para-voce",
+      "title": "Novidades para Você",
+      "subtitle": "Atualizações no seu clima",
+      "description": "Lançamentos escolhidos para soar familiares, mas ainda trazer novidade.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Espresso", "artist": "Sabrina Carpenter", "album": "Short n' Sweet", "duration": "2:56", "youtubeId": "eVli-tstM5E"},
+        {"title": "Please Please Please", "artist": "Sabrina Carpenter", "album": "Short n' Sweet", "duration": "3:06", "youtubeId": "cF1Na4AIecM"},
+        {"title": "greedy", "artist": "Tate McRae", "album": "Think Later", "duration": "2:11", "youtubeId": "To4SWGZkEPk"},
+        {"title": "Paint The Town Red", "artist": "Doja Cat", "album": "Scarlet", "duration": "3:52", "youtubeId": "m4_9TFeMfJE"}
+      ]
+    },
+    {
+      "slug": "tocadas-recentemente",
+      "title": "Tocadas Recentemente",
+      "subtitle": "Volte para o que colou",
+      "description": "Uma recapitulação rápida das músicas que mais prenderam sua atenção.",
+      "accentColor": "#A73CFF",
+      "songs": [
+        {"title": "Shape of You", "artist": "Ed Sheeran", "album": "Divide", "duration": "3:53", "youtubeId": "JGwWNGJdvx8"},
+        {"title": "Perfect", "artist": "Ed Sheeran", "album": "Divide", "duration": "4:23", "youtubeId": "2Vv-BfVoq4g"},
+        {"title": "Believer", "artist": "Imagine Dragons", "album": "Evolve", "duration": "3:24", "youtubeId": "7wtfhZwyrcc"},
+        {"title": "Sunflower", "artist": "Post Malone", "album": "Hollywood's Bleeding", "duration": "2:38", "youtubeId": "ApXoWvfEYVU"}
+      ]
+    },
+    {
+      "slug": "favoritas",
+      "title": "Favoritas",
+      "subtitle": "As que merecem replay",
+      "description": "Seu ponto de partida para abrir playlists salvas e revisar as faixas que mais marcaram.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "All of Me", "artist": "John Legend", "album": "Love in the Future", "duration": "4:30", "youtubeId": "450p7goxZqg"},
+        {"title": "Thinking Out Loud", "artist": "Ed Sheeran", "album": "x", "duration": "4:57", "youtubeId": "lp-EO5I60KA"},
+        {"title": "Night Changes", "artist": "One Direction", "album": "FOUR", "duration": "3:47", "youtubeId": "syFZfO_wfMQ"},
+        {"title": "Smells Like Teen Spirit", "artist": "Nirvana", "album": "Nevermind", "duration": "5:01", "youtubeId": "hTWKbfoikeg"}
+      ]
+    },
+    {
+      "slug": "rock-classicos",
+      "title": "Rock Clássico",
+      "subtitle": "Lendas e riffs eternos",
+      "description": "Uma viagem pelos clássicos que definiram a história do rock.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Bohemian Rhapsody", "artist": "Queen", "album": "A Night at the Opera", "duration": "5:55", "youtubeId": "fJ9rUzIMcZQ"},
+        {"title": "Sweet Child O' Mine", "artist": "Guns N' Roses", "album": "Appetite for Destruction", "duration": "5:56", "youtubeId": "1w7OgIMMRc4"},
+        {"title": "Dream On", "artist": "Aerosmith", "album": "Aerosmith", "duration": "4:28", "youtubeId": "89dGC8de0CA"},
+        {"title": "Hotel California", "artist": "Eagles", "album": "Hotel California", "duration": "6:31", "youtubeId": "BciS5krYL80"}
+      ]
+    },
+    {
+      "slug": "rock-alternativo",
+      "title": "Rock Alternativo",
+      "subtitle": "Peso moderno e atitude",
+      "description": "Clima alternativo, refrões grandes e guitarras atuais.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Mr. Brightside", "artist": "The Killers", "album": "Hot Fuss", "duration": "3:43", "youtubeId": "gGdGFtwCNBE"},
+        {"title": "Do I Wanna Know?", "artist": "Arctic Monkeys", "album": "AM", "duration": "4:32", "youtubeId": "bpOSxM0rNPM"},
+        {"title": "Somebody Told Me", "artist": "The Killers", "album": "Hot Fuss", "duration": "3:18", "youtubeId": "Y5fBdpreJiU"},
+        {"title": "The Pretender", "artist": "Foo Fighters", "album": "Echoes, Silence, Patience & Grace", "duration": "4:29", "youtubeId": "SBjQ9tuuTJQ"}
+      ]
+    },
+    {
+      "slug": "hard-rock",
+      "title": "Hard Rock",
+      "subtitle": "Volume alto e energia",
+      "description": "Guitarras rasgadas, baterias fortes e clima de arena.",
+      "accentColor": "#D955C8",
+      "songs": [
+        {"title": "Back In Black", "artist": "AC/DC", "album": "Back In Black", "duration": "4:15", "youtubeId": "pAgnJDJN4VA"},
+        {"title": "Paradise City", "artist": "Guns N' Roses", "album": "Appetite for Destruction", "duration": "6:45", "youtubeId": "Rbm6GXllBiw"},
+        {"title": "Livin' On A Prayer", "artist": "Bon Jovi", "album": "Slippery When Wet", "duration": "4:10", "youtubeId": "lDK9QqIzhwk"},
+        {"title": "Here I Go Again", "artist": "Whitesnake", "album": "Whitesnake", "duration": "4:35", "youtubeId": "WyF8RHM1OCg"}
+      ]
+    },
+    {
+      "slug": "metal-essentials",
+      "title": "Metal Essentials",
+      "subtitle": "Riffs pesados e impacto",
+      "description": "Uma seleção pesada para quem quer força e velocidade.",
+      "accentColor": "#A73CFF",
+      "songs": [
+        {"title": "Enter Sandman", "artist": "Metallica", "album": "Metallica", "duration": "5:31", "youtubeId": "CD-E-LDc384"},
+        {"title": "Duality", "artist": "Slipknot", "album": "Vol. 3", "duration": "4:13", "youtubeId": "6fVE8kSM43I"},
+        {"title": "Chop Suey!", "artist": "System Of A Down", "album": "Toxicity", "duration": "3:30", "youtubeId": "CSvFpBOe8eY"},
+        {"title": "Fear of the Dark", "artist": "Iron Maiden", "album": "Fear of the Dark", "duration": "7:18", "youtubeId": "bePCRKGUwAY"}
+      ]
+    },
+    {
+      "slug": "punk-rock",
+      "title": "Punk Rock",
+      "subtitle": "Pressa, atitude e refrão",
+      "description": "Músicas aceleradas para cantar alto e sem freio.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "American Idiot", "artist": "Green Day", "album": "American Idiot", "duration": "2:54", "youtubeId": "Ee_uujKuJMI"},
+        {"title": "All The Small Things", "artist": "blink-182", "album": "Enema of the State", "duration": "2:51", "youtubeId": "9Ht5RZpzPqw"},
+        {"title": "The Anthem", "artist": "Good Charlotte", "album": "The Young and the Hopeless", "duration": "2:56", "youtubeId": "desJKYvdq9A"},
+        {"title": "Misery Business", "artist": "Paramore", "album": "Riot!", "duration": "3:31", "youtubeId": "aCyGvGEtOwc"}
+      ]
+    },
+    {
+      "slug": "grunge",
+      "title": "Grunge",
+      "subtitle": "Peso cru dos anos 90",
+      "description": "A atmosfera densa de Seattle e seus hinos definitivos.",
+      "accentColor": "#8858FF",
+      "songs": [
+        {"title": "Come As You Are", "artist": "Nirvana", "album": "Nevermind", "duration": "3:39", "youtubeId": "vabnZ9-ex7o"},
+        {"title": "Black Hole Sun", "artist": "Soundgarden", "album": "Superunknown", "duration": "5:19", "youtubeId": "3mbBbFH9fAg"},
+        {"title": "Man in the Box", "artist": "Alice In Chains", "album": "Facelift", "duration": "4:46", "youtubeId": "TAqZb52sgpU"},
+        {"title": "Alive", "artist": "Pearl Jam", "album": "Ten", "duration": "5:41", "youtubeId": "qM0zINtulhM"}
+      ]
+    },
+    {
+      "slug": "indie-rock",
+      "title": "Indie Rock",
+      "subtitle": "Guitarra moderna e cool",
+      "description": "Faixas com pegada indie, garage e refrões marcantes.",
+      "accentColor": "#FF62C5",
+      "songs": [
+        {"title": "Take Me Out", "artist": "Franz Ferdinand", "album": "Franz Ferdinand", "duration": "3:59", "youtubeId": "Ijk4j-r7qPA"},
+        {"title": "Last Nite", "artist": "The Strokes", "album": "Is This It", "duration": "3:17", "youtubeId": "TOypSnKFHrE"},
+        {"title": "R U Mine?", "artist": "Arctic Monkeys", "album": "AM", "duration": "3:21", "youtubeId": "VQH8ZTgna3Q"},
+        {"title": "Sex on Fire", "artist": "Kings of Leon", "album": "Only by the Night", "duration": "3:24", "youtubeId": "RF0HhrwIwp0"}
+      ]
+    },
+    {
+      "slug": "rock-nacional",
+      "title": "Rock Nacional",
+      "subtitle": "Brasil com guitarra",
+      "description": "Clássicos e hinos do rock brasileiro para tocar sem parar.",
+      "accentColor": "#C74FFF",
+      "songs": [
+        {"title": "Tempo Perdido", "artist": "Legião Urbana", "album": "Dois", "duration": "5:02", "youtubeId": "w0sM2qefCig"},
+        {"title": "Proibida Pra Mim", "artist": "Charlie Brown Jr.", "album": "Transpiração Contínua Prolongada", "duration": "3:24", "youtubeId": "6T72qMMQ7Qw"},
+        {"title": "Anna Júlia", "artist": "Los Hermanos", "album": "Los Hermanos", "duration": "3:36", "youtubeId": "B4v6aNjGFFk"},
+        {"title": "À Sua Maneira", "artist": "Capital Inicial", "album": "Rosas e Vinho Tinto", "duration": "3:34", "youtubeId": "8rQQOQ-BiOI"}
+      ]
+    },
+    {
+      "slug": "pop-rock",
+      "title": "Pop Rock",
+      "subtitle": "Fácil de cantar, impossível parar",
+      "description": "Mistura de rock e pop com apelo gigante e refrões fortes.",
+      "accentColor": "#FF6BCB",
+      "songs": [
+        {"title": "It's My Life", "artist": "Bon Jovi", "album": "Crush", "duration": "3:44", "youtubeId": "vx2u5uUu3DE"},
+        {"title": "Complicated", "artist": "Avril Lavigne", "album": "Let Go", "duration": "4:05", "youtubeId": "5NPBIwQyPWE"},
+        {"title": "Iris", "artist": "Goo Goo Dolls", "album": "Dizzy Up the Girl", "duration": "4:49", "youtubeId": "NdYWuo9OFAw"},
+        {"title": "Use Somebody", "artist": "Kings of Leon", "album": "Only by the Night", "duration": "3:51", "youtubeId": "gnhXHvRoUd0"}
+      ]
+    },
+    {
+      "slug": "guitar-heroes",
+      "title": "Guitar Heroes",
+      "subtitle": "Solos que arrepiam",
+      "description": "Uma curadoria para quem quer guitarras virtuosas e inesquecíveis.",
+      "accentColor": "#856DFF",
+      "songs": [
+        {"title": "November Rain", "artist": "Guns N' Roses", "album": "Use Your Illusion I", "duration": "8:57", "youtubeId": "8SbUC-UaAxE"},
+        {"title": "Eruption", "artist": "Van Halen", "album": "Van Halen", "duration": "1:42", "youtubeId": "M4Czx8EWXb0"},
+        {"title": "Sultans of Swing", "artist": "Dire Straits", "album": "Dire Straits", "duration": "5:47", "youtubeId": "0fAQhSRLQnM"},
+        {"title": "Still Got The Blues", "artist": "Gary Moore", "album": "Still Got the Blues", "duration": "6:09", "youtubeId": "4O_YMLDvvnw"}
+      ]
+    },
+    {
+      "slug": "balada-eletronica",
+      "title": "Balada Eletrônica",
+      "subtitle": "Clima de pista ligado",
+      "description": "Batidas prontas para noite, pista e luz neon.",
+      "accentColor": "#FF4DA3",
+      "songs": [
+        {"title": "Titanium", "artist": "David Guetta ft. Sia", "album": "Nothing but the Beat", "duration": "4:06", "youtubeId": "JRfuAukYTKg"},
+        {"title": "Animals", "artist": "Martin Garrix", "album": "Gold Skies", "duration": "5:03", "youtubeId": "gCYcHz2k5x0"},
+        {"title": "Turn Down for What", "artist": "DJ Snake & Lil Jon", "album": "Encore", "duration": "3:34", "youtubeId": "HMUDVMiITOU"},
+        {"title": "Wake Me Up", "artist": "Avicii", "album": "True", "duration": "4:33", "youtubeId": "IcrbM1l_BoI"}
+      ]
+    },
+    {
+      "slug": "alok-hits",
+      "title": "Alok Hits",
+      "subtitle": "Brasil dominando a pista",
+      "description": "Faixas e colaborações com a assinatura do Alok para esquentar a noite.",
+      "accentColor": "#FF0A7A",
+      "songs": [
+        {"title": "Hear Me Now", "artist": "Alok, Bruno Martini e Zeeba", "album": "Singles", "duration": "3:12", "youtubeId": "JVpTp8IHdEg"},
+        {"title": "Deep Down", "artist": "Alok x Ella Eyre x Kenny Dope", "album": "Singles", "duration": "2:46", "youtubeId": "YVPrCdChOAk"},
+        {"title": "Ocean", "artist": "Alok, Zeeba e IRO", "album": "Singles", "duration": "3:01", "youtubeId": "wA4sU3G8J0Q"},
+        {"title": "Work With My Love", "artist": "Alok & James Arthur", "album": "Singles", "duration": "2:35", "youtubeId": "r58u7fW0ZxQ"}
+      ]
+    },
+    {
+      "slug": "rave-essentials",
+      "title": "Rave Essentials",
+      "subtitle": "Pancada de festival",
+      "description": "As essenciais para quem quer sentir clima de rave e mainstage.",
+      "accentColor": "#A73CFF",
+      "songs": [
+        {"title": "Levels", "artist": "Avicii", "album": "Levels", "duration": "5:38", "youtubeId": "_ovdm2yX4MA"},
+        {"title": "Mammoth", "artist": "Dimitri Vegas, Like Mike & Moguai", "album": "Mammoth", "duration": "4:42", "youtubeId": "_o-XIryB2gg"},
+        {"title": "Tremor", "artist": "Dimitri Vegas, Martin Garrix & Like Mike", "album": "Tremor", "duration": "4:54", "youtubeId": "9vMh9f41pqE"},
+        {"title": "Reload", "artist": "Sebastian Ingrosso, Tommy Trash & John Martin", "album": "Reload", "duration": "5:45", "youtubeId": "yRmqZrpE6r8"}
+      ]
+    },
+    {
+      "slug": "edm-festival",
+      "title": "EDM Festival",
+      "subtitle": "Mainstage e braços pro alto",
+      "description": "Uma seleção de hinos de festival para não deixar a energia cair.",
+      "accentColor": "#FF62C5",
+      "songs": [
+        {"title": "Don't You Worry Child", "artist": "Swedish House Mafia", "album": "Until Now", "duration": "3:32", "youtubeId": "1y6smkh6c-0"},
+        {"title": "Clarity", "artist": "Zedd ft. Foxes", "album": "Clarity", "duration": "4:31", "youtubeId": "IxxstCcJlsc"},
+        {"title": "Lean On", "artist": "Major Lazer & DJ Snake", "album": "Peace Is The Mission", "duration": "2:56", "youtubeId": "YqeW9_5kURI"},
+        {"title": "Scared To Be Lonely", "artist": "Martin Garrix & Dua Lipa", "album": "Singles", "duration": "3:41", "youtubeId": "e2vBLd5Egnk"}
+      ]
+    },
+    {
+      "slug": "house-party",
+      "title": "House Party",
+      "subtitle": "Groove para noite longa",
+      "description": "House e dance com swing para manter a pista elegante e quente.",
+      "accentColor": "#8858FF",
+      "songs": [
+        {"title": "Piece Of Your Heart", "artist": "MEDUZA ft. Goodboys", "album": "Singles", "duration": "2:33", "youtubeId": "KWjV25q34Hw"},
+        {"title": "Head & Heart", "artist": "Joel Corry ft. MNEK", "album": "Singles", "duration": "2:47", "youtubeId": "CRuOOxF-ENQ"},
+        {"title": "Turn Me On", "artist": "Riton x Oliver Heldens", "album": "Singles", "duration": "3:31", "youtubeId": "0n7J6XnQ0lM"},
+        {"title": "Losing It", "artist": "FISHER", "album": "Losing It", "duration": "4:08", "youtubeId": "o3WdLtpWM_c"}
+      ]
+    },
+    {
+      "slug": "progressive-house",
+      "title": "Progressive House",
+      "subtitle": "Construção e explosão",
+      "description": "Clima melódico e crescente para manter a pista hipnotizada.",
+      "accentColor": "#C74FFF",
+      "songs": [
+        {"title": "Calling (Lose My Mind)", "artist": "Sebastian Ingrosso & Alesso", "album": "Calling", "duration": "5:17", "youtubeId": "8aShfolR6w8"},
+        {"title": "If I Lose Myself", "artist": "Alesso vs OneRepublic", "album": "Singles", "duration": "3:34", "youtubeId": "OOevVQwQ-LM"},
+        {"title": "Under Control", "artist": "Calvin Harris & Alesso", "album": "Motion", "duration": "3:04", "youtubeId": "x8cQgLh1jSI"},
+        {"title": "Sun Is Shining", "artist": "Axwell /\\ Ingrosso", "album": "More Than You Know", "duration": "4:15", "youtubeId": "nbXgHAzUWB0"}
+      ]
+    },
+    {
+      "slug": "techno-nights",
+      "title": "Techno Nights",
+      "subtitle": "Escuro, pulsante e hipnótico",
+      "description": "Uma seleção para noites intensas, graves fundos e pista lotada.",
+      "accentColor": "#FF6BCB",
+      "songs": [
+        {"title": "Losing It", "artist": "FISHER", "album": "Losing It", "duration": "4:08", "youtubeId": "o3WdLtpWM_c"},
+        {"title": "Your Mind", "artist": "Adam Beyer & Bart Skils", "album": "Your Mind", "duration": "8:16", "youtubeId": "O3dr0k1fP6k"},
+        {"title": "Age Of Love", "artist": "Charlotte de Witte & Enrico Sangiuliano", "album": "Age Of Love", "duration": "3:25", "youtubeId": "0P0iQe5r0xM"},
+        {"title": "The Age Of Love", "artist": "Age Of Love", "album": "Singles", "duration": "3:25", "youtubeId": "30eXKMfrVcw"}
+      ]
+    },
+    {
+      "slug": "trance-energy",
+      "title": "Trance Energy",
+      "subtitle": "Melodia, viagem e euforia",
+      "description": "Trance para subir a energia e deixar a pista flutuando.",
+      "accentColor": "#7A6BFF",
+      "songs": [
+        {"title": "Adagio For Strings", "artist": "Tiësto", "album": "Just Be", "duration": "7:23", "youtubeId": "8tIgN7eICn4"},
+        {"title": "Exploration Of Space", "artist": "Cosmic Gate", "album": "Back 2 Back Vol. 2", "duration": "3:58", "youtubeId": "NE2AvbROl5k"},
+        {"title": "Better Off Alone", "artist": "Alice Deejay", "album": "Who Needs Guitars Anyway?", "duration": "3:38", "youtubeId": "Lgs9QUtWc3M"},
+        {"title": "Children", "artist": "Robert Miles", "album": "Dreamland", "duration": "4:04", "youtubeId": "QwqmJilXxJY"}
+      ]
+    }
+  ]
+}

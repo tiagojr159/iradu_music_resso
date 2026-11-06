@@ -1,0 +1,50 @@
+.gradle/
+local.properties
+.DS_Store
+build/
+captures/
+.idea/
+*.iml
+*~
+.weblate
+.kotlin
+*.class
+app/debug/
+app/release/
+
+# vscode / eclipse files
+*.classpath
+*.project
+*.settings
+bin/
+.vscode/
+*.code-workspace
+
+# Android/Gradle build outputs
+**/build/
+app/.cxx/
+app/.externalNativeBuild/
+app/.kotlin/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+out/
+
+# APK / bundle artifacts
+*.apk
+*.aab
+
+# Keystores / signing
+*.jks
+*.keystore
+*.pem
+*.p12
+*.pfx
+
+# Logs / crash dumps
+*.log
+*.hprof
+
+# Misc local/temporary files
+gradle/gradle-daemon-jvm.properties

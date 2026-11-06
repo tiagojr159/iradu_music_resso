@@ -1,0 +1,7 @@
+﻿[Iradu Music]
+
+Updated:
+â€¢ merged latest changes from Iradu Music's dev branch
+Changed:
+â€¢ changed app name in the database export file (thanks @roryokane)
+â€¢ removed core.symlinks=false git config from CI (thanks @Mynacol)

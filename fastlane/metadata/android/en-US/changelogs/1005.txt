@@ -1,0 +1,12 @@
+﻿[Iradu Music]
+
+Updated:
+â€¢ merged latest changes from Iradu Music's master branch
+
+Improved:
+â€¢ fixed some gesture stuff
+
+Added:
+â€¢ max playback speed is now adjustable
+â€¢ now seek can be used (instead of skip) on external media button events
+â€¢ swipe areas are now adjustable 
