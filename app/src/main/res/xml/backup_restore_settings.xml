@@ -7,7 +7,7 @@
         android:summary="@string/import_data_summary"
         android:title="@string/import_data_title"
         app:singleLineTitle="false"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false" /> 
 
     <Preference
         android:key="@string/export_data"
