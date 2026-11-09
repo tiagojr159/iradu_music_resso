@@ -16,6 +16,7 @@ import java.util.function.Consumer
 import org.schabi.newpipe.MainActivity
 import org.schabi.newpipe.NewPipeDatabase
 import org.schabi.newpipe.R
+import org.schabi.newpipe.database.stream.StreamStatisticsEntry
 import org.schabi.newpipe.error.ErrorInfo
 import org.schabi.newpipe.extractor.InfoItem.InfoType
 import org.schabi.newpipe.extractor.NewPipe
@@ -73,7 +74,9 @@ class MediaBrowserPlaybackPreparer(
         }
 
         disposable?.dispose()
-        val startShuffled = mediaId.toUri().pathSegments.firstOrNull() == ID_CATALOG_SHUFFLE
+        val mediaPath = mediaId.toUri().pathSegments
+        val startShuffled = mediaPath.firstOrNull() == ID_CATALOG_SHUFFLE ||
+            mediaPath.firstOrNull() == MediaBrowserImpl.ID_FAVORITES_SHUFFLE
         disposable = extractPlayQueueFromMediaId(mediaId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -188,6 +191,8 @@ class MediaBrowserPlaybackPreparer(
 
                 ID_HISTORY -> extractPlayQueueFromHistoryMediaId(mediaId, path)
 
+                MediaBrowserImpl.ID_FAVORITES_SHUFFLE -> extractFavoritesShuffleQueue(mediaId, path)
+
                 ID_INFO_ITEM -> extractPlayQueueFromInfoItemMediaId(
                     mediaId,
                     path,
@@ -260,6 +265,25 @@ class MediaBrowserPlaybackPreparer(
                     .filter { it.streamId == streamId }
                     .map { it.toStreamInfoItem() }
                 SinglePlayQueue(infoItems, 0)
+            }
+    }
+
+    private fun extractFavoritesShuffleQueue(mediaId: String, path: List<String>): Single<PlayQueue> {
+        if (path.isNotEmpty()) {
+            return Single.error(parseError(mediaId))
+        }
+        return database.streamHistoryDAO().getStatistics()
+            .firstOrError()
+            .map { items ->
+                val favoriteItems = items.sortedWith(
+                    compareByDescending<StreamStatisticsEntry> {
+                        it.watchCount
+                    }.thenByDescending { it.latestAccessDate }
+                ).take(24).map { it.toStreamInfoItem() }
+                if (favoriteItems.isEmpty()) {
+                    throw parseError(mediaId)
+                }
+                SinglePlayQueue(favoriteItems, 0)
             }
     }
 

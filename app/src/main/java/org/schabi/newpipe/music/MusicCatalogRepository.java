@@ -49,12 +49,16 @@ public final class MusicCatalogRepository {
     private static final String LAST_CHANGED_TRACK_COUNT_KEY = "music_catalog_changed_track_count";
     private static final long WEEK_MS = 7L * 24L * 60L * 60L * 1000L;
     private static final long RETRY_DELAY_MS = 6L * 60L * 60L * 1000L;
-    private static final int CACHE_VERSION = 3;
+    private static final int CACHE_VERSION = 4;
     private static final int MAX_REFRESHED_SONGS = 12;
     private static final int DEFAULT_SERVICE_ID = ServiceList.YouTube.getServiceId();
     private static final List<String> WEEKLY_PLAYLIST_SLUGS = List.of(
             "top-brasil", "top-global", "viral-hits", "lancamentos",
-            "descobertas-da-semana", "novidades-para-voce");
+            "descobertas-da-semana", "novidades-para-voce",
+            "indie", "rock", "hip-hop", "k-pop", "sertanejo", "gospel", "piseiro",
+            "relax", "happy", "workout", "party", "focus", "romantic", "sad",
+            "road-trip", "sleep", "energized", "chill", "nostalgic", "confidence",
+            "rainy-day");
 
     public MusicCatalog loadCatalog(@NonNull final Context context) throws IOException {
         try {
@@ -577,6 +581,11 @@ public final class MusicCatalogRepository {
                         "sertanejo 2026",
                         "piseiro sertanejo hits",
                         "modao sertanejo playlist");
+            case "piseiro":
+                return List.of(
+                        "piseiro João Gomes Zé Vaqueiro Rey Vaqueiro",
+                        "piseiro hits João Gomes Zé Vaqueiro",
+                        "Rey Vaqueiro piseiro");
             case "gospel":
                 return List.of(
                         "gospel louvor 2026",

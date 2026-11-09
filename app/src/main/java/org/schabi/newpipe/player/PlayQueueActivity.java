@@ -6,6 +6,7 @@ import static org.schabi.newpipe.player.helper.PlayerHelper.formatSpeed;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -620,6 +621,11 @@ public final class PlayQueueActivity extends AppCompatActivity
 
         final int shuffleAlpha = shuffled ? 255 : 77;
         queueControlBinding.controlShuffle.setImageAlpha(shuffleAlpha);
+        if (shuffled) {
+            queueControlBinding.controlShuffle.setColorFilter(Color.rgb(255, 77, 163));
+        } else {
+            queueControlBinding.controlShuffle.clearColorFilter();
+        }
         queueControlBinding.controlShuffle.setSelected(shuffled);
         queueControlBinding.controlShuffle.setActivated(shuffled);
     }

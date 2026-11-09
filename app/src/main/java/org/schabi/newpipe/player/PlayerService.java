@@ -66,6 +66,7 @@ public final class PlayerService extends MediaLibraryService {
     private static final String ACTION_TOGGLE_CAR_REPEAT_ONE =
             "org.schabi.newpipe.action.TOGGLE_CAR_REPEAT_ONE";
     private static final String URI_MEDIA_ID_PREFIX = "iradu_uri:";
+    private static final String SEARCH_MEDIA_ID_PREFIX = "iradu_search:";
     private static final String CONTENT_STYLE_BROWSABLE_HINT =
             "android.media.browse.CONTENT_STYLE_BROWSABLE_HINT";
     private static final String CONTENT_STYLE_PLAYABLE_HINT =
@@ -79,6 +80,8 @@ public final class PlayerService extends MediaLibraryService {
     private MediaBrowserImpl mediaBrowserImpl;
     private MediaBrowserPlaybackPreparer mediaBrowserPlaybackPreparer;
     private MediaSessionBridgePlayer mediaSessionPlayer;
+    @Nullable
+    private String pendingCarSearchQuery;
     private MediaLibrarySession mediaLibrarySession;
 
     @Nullable
@@ -108,7 +111,13 @@ public final class PlayerService extends MediaLibraryService {
                 });
         mediaSessionPlayer = new MediaSessionBridgePlayer(
                 () -> player,
-                () -> mediaBrowserPlaybackPreparer.onPrepareFromSearch("", true, Bundle.EMPTY),
+                () -> {
+                    final String query = pendingCarSearchQuery == null
+                            ? "" : pendingCarSearchQuery;
+                    pendingCarSearchQuery = null;
+                    mediaBrowserPlaybackPreparer.onPrepareFromSearch(
+                            query, true, Bundle.EMPTY);
+                },
                 this::isAndroidAutoArtworkEnabled);
         mediaBrowserPlaybackPreparer = new MediaBrowserPlaybackPreparer(
                 this,
@@ -378,6 +387,16 @@ public final class PlayerService extends MediaLibraryService {
         }
 
         final MediaItem requestedItem = source.get(index);
+        final String searchQuery = requestedItem.requestMetadata.searchQuery;
+        if (searchQuery != null && !searchQuery.isBlank()) {
+            resolvedItems.add(requestedItem.buildUpon()
+                    .setMediaId(SEARCH_MEDIA_ID_PREFIX + Uri.encode(searchQuery.trim()))
+                    .build());
+            resolveRequestedMediaItemsRecursive(source, index + 1,
+                    resolvedItems, future);
+            return;
+        }
+
         final String requestedMediaId = requestedItem.mediaId;
         if (requestedMediaId != null && !requestedMediaId.isBlank()) {
             try {
@@ -640,6 +659,21 @@ public final class PlayerService extends MediaLibraryService {
                 try {
                     final List<MediaItem> resolvedItems = resolvedItemsFuture.get();
                     if (resolvedItems.isEmpty()) {
+                        if (mediaItems.isEmpty() || mediaItems.stream().anyMatch(item ->
+                                item.requestMetadata.searchQuery != null
+                                        && !item.requestMetadata.searchQuery.isBlank())) {
+                            pendingCarSearchQuery = mediaItems.stream()
+                                    .map(item -> item.requestMetadata.searchQuery)
+                                    .filter(query -> query != null && !query.isBlank())
+                                    .findFirst()
+                                    .orElse("");
+                            Log.i(TAG, "Android Auto search fallback: query='"
+                                    + pendingCarSearchQuery + "'");
+                            future.set(new MediaSession.MediaItemsWithStartPosition(
+                                    List.of(), 0, startPositionMs));
+                            return;
+                        }
+
                         final IllegalStateException error = new IllegalStateException(
                                 "Nenhuma faixa foi resolvida para a seleção do Android Auto");
                         reportCarPlaybackError("Seleção de faixa", error.getMessage(), error);
@@ -665,6 +699,10 @@ public final class PlayerService extends MediaLibraryService {
                         return;
                     }
                     if (selectedItem.mediaId != null
+                            && selectedItem.mediaId.startsWith(SEARCH_MEDIA_ID_PREFIX)) {
+                        pendingCarSearchQuery = Uri.decode(selectedItem.mediaId.substring(
+                                SEARCH_MEDIA_ID_PREFIX.length()));
+                    } else if (selectedItem.mediaId != null
                             && selectedItem.mediaId.startsWith(URI_MEDIA_ID_PREFIX)) {
                         final android.net.Uri streamUri = android.net.Uri.parse(
                                 selectedItem.mediaId.substring(URI_MEDIA_ID_PREFIX.length()));

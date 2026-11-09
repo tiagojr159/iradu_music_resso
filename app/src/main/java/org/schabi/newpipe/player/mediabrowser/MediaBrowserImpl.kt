@@ -636,11 +636,31 @@ class MediaBrowserImpl(
     private fun populateFavorites(): Single<List<MediaItem>> {
         return database.streamHistoryDAO().getStatistics().firstOrError()
             .map { items ->
-                items.sortedWith(
+                listOf(createFavoritesShuffleMediaItem()) + items.sortedWith(
                     compareByDescending<StreamStatisticsEntry> { it.watchCount }
                         .thenByDescending { it.latestAccessDate }
                 ).take(24).map(this::createFavoriteMediaItem)
             }
+    }
+
+    private fun createFavoritesShuffleMediaItem(): MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(buildMediaId().appendPath(ID_FAVORITES_SHUFFLE).build().toString())
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(context.getString(R.string.resso_car_shuffle_playlist))
+                    .setSubtitle(context.getString(R.string.resso_favorite_music))
+                    .setArtworkUri(
+                        Uri.parse(
+                            "android.resource://${context.packageName}/${R.drawable.ic_shuffle}"
+                        )
+                    )
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
+                    .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                    .build()
+            )
+            .build()
     }
 
     private fun populateAllSongs(): Single<List<MediaItem>> {
@@ -876,6 +896,7 @@ class MediaBrowserImpl(
     companion object {
         private val TAG: String = MediaBrowserImpl::class.java.getSimpleName()
         private const val ID_CATALOG_SHUFFLE = "catalog_shuffle"
+        const val ID_FAVORITES_SHUFFLE = "favorites_shuffle"
         private const val ID_CAR_SETTINGS = "car_settings"
         const val ACTION_CAR_SHUFFLE = "shuffle"
         const val ACTION_CAR_REPEAT = "repeat_one"

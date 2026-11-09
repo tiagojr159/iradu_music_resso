@@ -1,8 +1,8 @@
 {
   "title": "Iradu resso",
   "featured": ["top-brasil", "top-global", "viral-hits", "lancamentos"],
-  "genrePlaylists": ["top-brasil", "top-global", "viral-hits", "lancamentos", "indie", "rock", "hip-hop", "k-pop", "sertanejo", "gospel"],
-  "moodPlaylists": ["relax", "happy", "workout", "party", "focus", "romantic", "sad", "road-trip", "sleep", "energized", "chill", "nostalgic", "confidence", "rainy-day"],
+  "genrePlaylists": ["top-brasil", "top-global", "viral-hits", "lancamentos", "indie", "rock", "hip-hop", "k-pop", "sertanejo", "gospel", "piseiro"],
+  "moodPlaylists": ["relax", "happy", "workout", "party", "focus", "romantic", "sad", "road-trip", "sleep", "energized", "chill", "nostalgic", "confidence", "rainy-day", "piseiro"],
   "automaticPlaylists": ["daily-mix", "descobertas-da-semana", "novidades-para-voce", "tocadas-recentemente", "favoritas"],
   "playlists": [
     {
@@ -133,6 +133,19 @@
         {"title": "Ninguém Explica Deus", "artist": "Preto no Branco", "album": "Preto no Branco", "duration": "4:31", "youtubeId": "YQHsXMglC9A"},
         {"title": "Lugar Secreto", "artist": "Gabriela Rocha", "album": "Ao Vivo", "duration": "7:05", "youtubeId": "LXb3EKWsInQ"},
         {"title": "Todavia Me Alegrarei", "artist": "Samuel Messias", "album": "Todavia Me Alegrarei", "duration": "5:07", "youtubeId": "pRpeEdMmmQ0"}
+      ]
+    },
+    {
+      "slug": "piseiro",
+      "title": "Piseiro",
+      "subtitle": "João Gomes, Zé Vaqueiro e Rey Vaqueiro",
+      "description": "Piseiro e forró para cantar junto, com João Gomes, Zé Vaqueiro e Rey Vaqueiro.",
+      "accentColor": "#FF8A24",
+      "songs": [
+        {"title": "Meu Pedaço de Pecado", "artist": "João Gomes", "album": "Meu Pedaço de Pecado", "duration": "2:39", "youtubeId": "NSI5FO4wimI"},
+        {"title": "Dengo (Ao Vivo)", "artist": "João Gomes", "album": "Ao Vivo", "duration": "3:05", "youtubeId": "StaXnSFJ5jQ"},
+        {"title": "Volta Comigo BB", "artist": "Zé Vaqueiro", "album": "O Original", "duration": "2:49", "youtubeId": "4PssBppUr6w"},
+        {"title": "Body Splash", "artist": "Rey Vaqueiro", "album": "Body Splash", "duration": "2:35", "youtubeId": "9_PWfGV9okI"}
       ]
     },
     {

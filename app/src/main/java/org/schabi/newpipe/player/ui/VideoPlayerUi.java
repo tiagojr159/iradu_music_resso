@@ -1139,6 +1139,11 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
 
     private void setShuffleButton(final boolean shuffled) {
         binding.shuffleButton.setImageAlpha(shuffled ? 255 : 77);
+        if (shuffled) {
+            binding.shuffleButton.setColorFilter(Color.rgb(255, 77, 163));
+        } else {
+            binding.shuffleButton.clearColorFilter();
+        }
         binding.shuffleButton.setSelected(shuffled);
         binding.shuffleButton.setActivated(shuffled);
     }
