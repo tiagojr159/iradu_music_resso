@@ -8,6 +8,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
+import androidx.work.Configuration
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
@@ -32,7 +33,9 @@ import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.downloader.Downloader
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor
 import org.schabi.newpipe.ktx.hasAssignableCause
+import org.schabi.newpipe.music.MusicCatalogRefreshWorker
 import org.schabi.newpipe.settings.NewPipeSettings
+import org.schabi.newpipe.util.AppLog
 import org.schabi.newpipe.util.BridgeStateSaverInitializer
 import org.schabi.newpipe.util.Localization
 import org.schabi.newpipe.util.ServiceHelper
@@ -60,11 +63,15 @@ import org.schabi.newpipe.util.potoken.PoTokenProviderImpl
  */
 open class App :
     Application(),
-    SingletonImageLoader.Factory {
+    SingletonImageLoader.Factory,
+    Configuration.Provider {
     var isFirstRun = false
         private set
     var notificationsRequested = false
         private set
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder().build()
 
     fun setNotificationsRequested() {
         notificationsRequested = true
@@ -79,6 +86,7 @@ open class App :
         super.onCreate()
 
         instance = this
+        AppLog.installUncaughtExceptionHandler(this)
 
         if (ProcessPhoenix.isPhoenixProcess(this)) {
             Log.i(TAG, "This is a phoenix process! Aborting initialization of App[onCreate]")
@@ -127,6 +135,8 @@ open class App :
         configureRxJavaErrorHandler()
 
         YoutubeStreamExtractor.setPoTokenProvider(PoTokenProviderImpl)
+
+        MusicCatalogRefreshWorker.schedule(this)
     }
 
     override fun newImageLoader(context: Context): ImageLoader = ImageLoader
@@ -180,6 +190,12 @@ open class App :
                         reportException(actualThrowable)
                     } else {
                         Log.e(TAG, "RxJavaPlugin: Undeliverable Exception received: ", actualThrowable)
+                        AppLog.record(
+                            this@App,
+                            "RxJava",
+                            "Erro assíncrono não tratado",
+                            actualThrowable
+                        )
                     }
                 }
 

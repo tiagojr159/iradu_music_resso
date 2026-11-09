@@ -10,11 +10,13 @@ package org.schabi.newpipe.player;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +44,7 @@ import org.schabi.newpipe.player.mediabrowser.MediaBrowserPlaybackPreparer;
 import org.schabi.newpipe.player.mediasession.MediaSessionBridgePlayer;
 import org.schabi.newpipe.player.notification.NotificationPlayerUi;
 import org.schabi.newpipe.player.notification.NotificationUtil;
+import org.schabi.newpipe.util.AppLog;
 import org.schabi.newpipe.util.ThemeHelper;
 
 import java.lang.ref.WeakReference;
@@ -58,6 +61,11 @@ public final class PlayerService extends MediaLibraryService {
     private static final String ANDROID_AUTO_PACKAGE = "com.google.android.projection.gearhead";
     private static final String ACTION_TOGGLE_ANDROID_AUTO_ARTWORK =
             "org.schabi.newpipe.action.TOGGLE_ANDROID_AUTO_ARTWORK";
+    private static final String ACTION_TOGGLE_CAR_SHUFFLE =
+            "org.schabi.newpipe.action.TOGGLE_CAR_SHUFFLE";
+    private static final String ACTION_TOGGLE_CAR_REPEAT_ONE =
+            "org.schabi.newpipe.action.TOGGLE_CAR_REPEAT_ONE";
+    private static final String URI_MEDIA_ID_PREFIX = "iradu_uri:";
     private static final String CONTENT_STYLE_BROWSABLE_HINT =
             "android.media.browse.CONTENT_STYLE_BROWSABLE_HINT";
     private static final String CONTENT_STYLE_PLAYABLE_HINT =
@@ -100,11 +108,13 @@ public final class PlayerService extends MediaLibraryService {
                 });
         mediaSessionPlayer = new MediaSessionBridgePlayer(
                 () -> player,
-                () -> mediaBrowserPlaybackPreparer.onPrepareFromSearch(null, true, Bundle.EMPTY),
+                () -> mediaBrowserPlaybackPreparer.onPrepareFromSearch("", true, Bundle.EMPTY),
                 this::isAndroidAutoArtworkEnabled);
         mediaBrowserPlaybackPreparer = new MediaBrowserPlaybackPreparer(
                 this,
-                (error, errorCode) -> Log.w(TAG, "Media session playback error: " + error),
+                (error, errorCode) -> reportCarPlaybackError(
+                        "Preparação da reprodução (código " + errorCode + ")",
+                        error.toString(), null),
                 () -> { },
                 playWhenReady -> {
                     if (player != null) {
@@ -299,11 +309,33 @@ public final class PlayerService extends MediaLibraryService {
         final boolean enabled = isAndroidAutoArtworkEnabled();
         final SessionCommand command = new SessionCommand(
                 ACTION_TOGGLE_ANDROID_AUTO_ARTWORK, Bundle.EMPTY);
-        return new CommandButton.Builder(CommandButton.ICON_UNDEFINED)
+        return new CommandButton.Builder(CommandButton.ICON_SETTINGS)
                 .setDisplayName(getString(enabled
                         ? R.string.android_auto_video_artwork_enabled
                         : R.string.android_auto_video_artwork_disabled))
                 .setSessionCommand(command)
+                .build();
+    }
+
+    private List<CommandButton> createAndroidAutoButtons() {
+        final boolean shuffled = player != null && player.getShuffleModeEnabled();
+        final boolean repeating = player != null && player.getRepeatMode()
+                == androidx.media3.common.Player.REPEAT_MODE_ONE;
+        return List.of(createAndroidAutoArtworkButton(),
+                createCarToggleButton(ACTION_TOGGLE_CAR_SHUFFLE,
+                        shuffled ? "Ordem aleatória ativada" : "Ordem aleatória",
+                        shuffled ? CommandButton.ICON_SHUFFLE_ON : CommandButton.ICON_SHUFFLE_OFF),
+                createCarToggleButton(ACTION_TOGGLE_CAR_REPEAT_ONE,
+                        repeating ? "Repetição ativada" : "Repetir música",
+                        repeating ? CommandButton.ICON_REPEAT_ONE : CommandButton.ICON_REPEAT_OFF));
+    }
+
+    private CommandButton createCarToggleButton(final String action,
+                                               final String label,
+                                               final int icon) {
+        return new CommandButton.Builder(icon)
+                .setDisplayName(label)
+                .setSessionCommand(new SessionCommand(action, Bundle.EMPTY))
                 .build();
     }
     //endregion
@@ -348,13 +380,23 @@ public final class PlayerService extends MediaLibraryService {
         final MediaItem requestedItem = source.get(index);
         final String requestedMediaId = requestedItem.mediaId;
         if (requestedMediaId != null && !requestedMediaId.isBlank()) {
-            mediaBrowserImpl.getItem(requestedMediaId).subscribe(
-                    item -> {
-                        resolvedItems.add(item);
-                        resolveRequestedMediaItemsRecursive(source, index + 1,
-                                resolvedItems, future);
-                    },
-                    throwable -> searchFallbackItem(source, index, resolvedItems, future));
+            try {
+                mediaBrowserImpl.getItem(requestedMediaId).subscribe(
+                        item -> {
+                            resolvedItems.add(item);
+                            resolveRequestedMediaItemsRecursive(source, index + 1,
+                                    resolvedItems, future);
+                        },
+                        throwable -> {
+                            Log.w(TAG, "Could not resolve Android Auto mediaId="
+                                    + requestedMediaId + "; trying URI/title fallback", throwable);
+                            searchFallbackItem(source, index, resolvedItems, future);
+                        });
+            } catch (final RuntimeException e) {
+                Log.e(TAG, "Synchronous failure resolving Android Auto mediaId="
+                        + requestedMediaId, e);
+                searchFallbackItem(source, index, resolvedItems, future);
+            }
             return;
         }
 
@@ -366,22 +408,45 @@ public final class PlayerService extends MediaLibraryService {
                                     @NonNull final List<MediaItem> resolvedItems,
                                     @NonNull final SettableFuture<List<MediaItem>> future) {
         final MediaItem requestedItem = source.get(index);
+        final Uri requestedUri = requestedItem.localConfiguration == null
+                ? null : requestedItem.localConfiguration.uri;
+        if (requestedUri != null) {
+            Log.w(TAG, "Falling back to selected media URI after mediaId resolution failed: "
+                    + requestedUri);
+            resolvedItems.add(requestedItem.buildUpon()
+                    .setMediaId(URI_MEDIA_ID_PREFIX + requestedUri)
+                    .build());
+            resolveRequestedMediaItemsRecursive(source, index + 1, resolvedItems, future);
+            return;
+        }
         final CharSequence title = requestedItem.mediaMetadata.title;
         final String query = title == null ? "" : title.toString().trim();
         if (query.isEmpty()) {
+            Log.w(TAG, "Android Auto sent an item without mediaId or title; index=" + index);
             resolveRequestedMediaItemsRecursive(source, index + 1, resolvedItems, future);
             return;
         }
 
-        mediaBrowserImpl.search(query).subscribe(
-                items -> {
-                    if (!items.isEmpty()) {
-                        resolvedItems.add(items.get(0));
-                    }
-                    resolveRequestedMediaItemsRecursive(source, index + 1, resolvedItems, future);
-                },
-                throwable -> resolveRequestedMediaItemsRecursive(source, index + 1,
-                        resolvedItems, future));
+        Log.i(TAG, "Resolving Android Auto selection by title fallback: " + query);
+        try {
+            mediaBrowserImpl.search(query).subscribe(
+                    items -> {
+                        if (!items.isEmpty()) {
+                            resolvedItems.add(items.get(0));
+                        }
+                        resolveRequestedMediaItemsRecursive(source, index + 1,
+                                resolvedItems, future);
+                    },
+                    throwable -> {
+                        reportCarPlaybackError("Busca de faixa", "Falha ao buscar '" + query + "'",
+                                throwable);
+                        resolveRequestedMediaItemsRecursive(source, index + 1,
+                                resolvedItems, future);
+                    });
+        } catch (final RuntimeException e) {
+            reportCarPlaybackError("Busca de faixa", "Falha ao buscar '" + query + "'", e);
+            resolveRequestedMediaItemsRecursive(source, index + 1, resolvedItems, future);
+        }
     }
 
     private final class MediaLibraryCallback implements MediaLibrarySession.Callback {
@@ -397,13 +462,16 @@ public final class PlayerService extends MediaLibraryService {
             final MediaSession.ConnectionResult.AcceptedResultBuilder resultBuilder =
                     new MediaSession.ConnectionResult.AcceptedResultBuilder(session);
             if (ANDROID_AUTO_PACKAGE.equals(controller.getPackageName())) {
-                final SessionCommand command = new SessionCommand(
-                        ACTION_TOGGLE_ANDROID_AUTO_ARTWORK, Bundle.EMPTY);
+                final SessionCommands availableSessionCommands = MediaSession.ConnectionResult
+                        .DEFAULT_SESSION_AND_LIBRARY_COMMANDS
+                        .buildUpon()
+                        .add(new SessionCommand(ACTION_TOGGLE_ANDROID_AUTO_ARTWORK, Bundle.EMPTY))
+                        .add(new SessionCommand(ACTION_TOGGLE_CAR_SHUFFLE, Bundle.EMPTY))
+                        .add(new SessionCommand(ACTION_TOGGLE_CAR_REPEAT_ONE, Bundle.EMPTY))
+                        .build();
                 resultBuilder
-                        .setAvailableSessionCommands(new SessionCommands.Builder()
-                                .add(command)
-                                .build())
-                        .setCustomLayout(List.of(createAndroidAutoArtworkButton()));
+                        .setAvailableSessionCommands(availableSessionCommands)
+                        .setCustomLayout(createAndroidAutoButtons());
             }
             return resultBuilder.build();
         }
@@ -441,6 +509,8 @@ public final class PlayerService extends MediaLibraryService {
                     item -> future.set(LibraryResult.ofItem(item, null)),
                     throwable -> {
                         Log.e(TAG, "Failed to resolve media item " + mediaId, throwable);
+                        AppLog.INSTANCE.record(
+                                PlayerService.this, "Android Auto / item", mediaId, throwable);
                         future.set(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
                     });
             return future;
@@ -465,6 +535,8 @@ public final class PlayerService extends MediaLibraryService {
                             withAndroidAutoContentStyle(params))),
                     throwable -> {
                         Log.e(TAG, "Failed to load children for " + parentId, throwable);
+                        AppLog.INSTANCE.record(
+                                PlayerService.this, "Android Auto / lista", parentId, throwable);
                         future.set(LibraryResult.ofError(LibraryResult.RESULT_ERROR_IO));
                     });
             return future;
@@ -506,6 +578,8 @@ public final class PlayerService extends MediaLibraryService {
                     },
                     throwable -> {
                         Log.e(TAG, "Failed to prepare search results for " + query, throwable);
+                        AppLog.INSTANCE.record(
+                                PlayerService.this, "Android Auto / busca", query, throwable);
                         future.set(LibraryResult.ofError(LibraryResult.RESULT_ERROR_IO, params));
                     });
             return future;
@@ -530,6 +604,8 @@ public final class PlayerService extends MediaLibraryService {
                             params)),
                     throwable -> {
                         Log.e(TAG, "Failed to search media for " + query, throwable);
+                        AppLog.INSTANCE.record(
+                                PlayerService.this, "Android Auto / busca", query, throwable);
                         future.set(LibraryResult.ofError(LibraryResult.RESULT_ERROR_IO));
                     });
             return future;
@@ -564,16 +640,38 @@ public final class PlayerService extends MediaLibraryService {
                 try {
                     final List<MediaItem> resolvedItems = resolvedItemsFuture.get();
                     if (resolvedItems.isEmpty()) {
-                        mediaBrowserPlaybackPreparer.onPrepareFromSearch(null, true, Bundle.EMPTY);
-                        future.set(new MediaSession.MediaItemsWithStartPosition(
-                                List.of(), 0, startPositionMs));
+                        final IllegalStateException error = new IllegalStateException(
+                                "Nenhuma faixa foi resolvida para a seleção do Android Auto");
+                        reportCarPlaybackError("Seleção de faixa", error.getMessage(), error);
+                        future.setException(error);
                         return;
                     }
 
                     final int index = startIndex >= 0 && startIndex < resolvedItems.size()
                             ? startIndex : 0;
                     final MediaItem selectedItem = resolvedItems.get(index);
-                    if (selectedItem.mediaId != null && !selectedItem.mediaId.isBlank()) {
+                    Log.i(TAG, "Android Auto selected media item: controller="
+                            + controller.getPackageName() + ", mediaId=" + selectedItem.mediaId
+                            + ", title=" + selectedItem.mediaMetadata.title
+                            + ", uri=" + selectedItem.localConfiguration);
+                    final String carSettingAction = selectedItem.mediaId == null ? null
+                            : mediaBrowserImpl.getCarSettingAction(selectedItem.mediaId);
+                    if (carSettingAction != null) {
+                        handleCarSettingAction(carSettingAction, session, controller);
+                        future.set(new MediaSession.MediaItemsWithStartPosition(
+                                mediaSessionPlayer.getCurrentMediaItems(),
+                                mediaSessionPlayer.getCurrentMediaItemIndex(),
+                                mediaSessionPlayer.getCurrentPositionMs()));
+                        return;
+                    }
+                    if (selectedItem.mediaId != null
+                            && selectedItem.mediaId.startsWith(URI_MEDIA_ID_PREFIX)) {
+                        final android.net.Uri streamUri = android.net.Uri.parse(
+                                selectedItem.mediaId.substring(URI_MEDIA_ID_PREFIX.length()));
+                        mediaBrowserPlaybackPreparer.onPrepareFromUri(
+                                streamUri, true, Bundle.EMPTY);
+                    } else if (selectedItem.mediaId != null
+                            && !selectedItem.mediaId.isBlank()) {
                         mediaBrowserPlaybackPreparer.onPrepareFromMediaId(
                                 selectedItem.mediaId,
                                 true,
@@ -581,7 +679,7 @@ public final class PlayerService extends MediaLibraryService {
                     } else {
                         final CharSequence title = selectedItem.mediaMetadata.title;
                         mediaBrowserPlaybackPreparer.onPrepareFromSearch(
-                                title == null ? null : title.toString(),
+                                title == null ? "" : title.toString(),
                                 true,
                                 Bundle.EMPTY);
                     }
@@ -591,12 +689,31 @@ public final class PlayerService extends MediaLibraryService {
                             startPositionMs));
                 } catch (final Exception e) {
                     Log.e(TAG, "Failed to handle setMediaItems", e);
-                    mediaBrowserPlaybackPreparer.onPrepareFromSearch(null, true, Bundle.EMPTY);
-                    future.set(new MediaSession.MediaItemsWithStartPosition(
-                            List.of(), 0, startPositionMs));
+                    reportCarPlaybackError("Seleção de faixa",
+                            "O carro não conseguiu abrir a música selecionada", e);
+                    future.setException(e);
                 }
             }, Runnable::run);
             return future;
+        }
+
+        private void handleCarSettingAction(
+                @NonNull final String action,
+                @NonNull final MediaSession session,
+                @NonNull final MediaSession.ControllerInfo controller) {
+            if (MediaBrowserImpl.ACTION_CAR_ARTWORK.equals(action)) {
+                toggleAndroidAutoArtwork();
+            } else {
+                ensurePlayer();
+                if (MediaBrowserImpl.ACTION_CAR_SHUFFLE.equals(action)) {
+                    player.toggleShuffleModeEnabled();
+                } else if (MediaBrowserImpl.ACTION_CAR_REPEAT.equals(action)) {
+                    player.toggleRepeatOne();
+                }
+            }
+            mediaSessionPlayer.refresh();
+            mediaBrowserImpl.notifyCarSettingsChanged();
+            session.setCustomLayout(controller, createAndroidAutoButtons());
         }
 
         @Override
@@ -607,12 +724,37 @@ public final class PlayerService extends MediaLibraryService {
                 @NonNull final Bundle args) {
             if (ACTION_TOGGLE_ANDROID_AUTO_ARTWORK.equals(customCommand.customAction)) {
                 toggleAndroidAutoArtwork();
-                return session.setCustomLayout(controller,
-                        List.of(createAndroidAutoArtworkButton()));
+            } else if (ACTION_TOGGLE_CAR_SHUFFLE.equals(customCommand.customAction)) {
+                ensurePlayer();
+                player.toggleShuffleModeEnabled();
+            } else if (ACTION_TOGGLE_CAR_REPEAT_ONE.equals(customCommand.customAction)) {
+                ensurePlayer();
+                player.toggleRepeatOne();
+            } else {
+                sendBroadcast(new Intent(customCommand.customAction));
             }
-            sendBroadcast(new Intent(customCommand.customAction));
-            return Futures.immediateFuture(new SessionResult(SessionResult.RESULT_SUCCESS));
+            mediaSessionPlayer.refresh();
+            return session.setCustomLayout(controller, createAndroidAutoButtons());
         }
+    }
+
+    private void reportCarPlaybackError(final String stage, final String details,
+                                       @Nullable final Throwable throwable) {
+        final String message = "Android Auto playback failure at " + stage + ": " + details;
+        if (throwable == null) {
+            Log.e(TAG, message);
+        } else {
+            Log.e(TAG, message, throwable);
+        }
+        AppLog.INSTANCE.record(this, "Android Auto / " + stage, details, throwable);
+        final String visibleDetails = (stage + ": " + details).length() > 180
+                ? (stage + ": " + details).substring(0, 177) + "..."
+                : stage + ": " + details;
+        new android.os.Handler(getMainLooper()).post(() -> Toast.makeText(
+                getApplicationContext(),
+                "Iradu Music parece não estar funcionando no momento. "
+                        + visibleDetails,
+                Toast.LENGTH_LONG).show());
     }
 
     private static List<MediaItem> applyPaging(final List<MediaItem> items,

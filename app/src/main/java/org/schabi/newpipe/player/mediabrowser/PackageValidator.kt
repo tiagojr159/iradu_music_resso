@@ -85,12 +85,16 @@ internal class PackageValidator(context: Context) {
          */
 
         // Build the caller info for the rest of the checks here.
-        val callerPackageInfo = buildCallerInfo(callingPackage)
-            ?: error("Caller wasn't found in the system?")
+        // Android Auto and its companion processes can report a package name that is not
+        // visible to PackageManager on every Android version. This check is diagnostic; the
+        // media session still handles the connection, so an unresolved package must not crash
+        // PlayerService while Android Auto is opening the app.
+        val callerPackageInfo = buildCallerInfo(callingPackage) ?: return false
 
         // Verify that things aren't ... broken. (This test should always pass.)
-        check(callerPackageInfo.uid == callingUid) {
-            "Caller's package UID doesn't match caller's actual UID?"
+        if (callerPackageInfo.uid != callingUid) {
+            Log.w(TAG, "Ignoring caller with mismatched UID: package=$callingPackage")
+            return false
         }
 
         val callerSignature = callerPackageInfo.signature

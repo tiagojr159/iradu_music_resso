@@ -157,12 +157,20 @@ public final class NavigationHelper {
     public static void playOnBackgroundPlayer(final Context context,
                                               final PlayQueue queue,
                                               final boolean resumePlayback) {
+        playOnBackgroundPlayer(context, queue, resumePlayback, false);
+    }
+
+    public static void playOnBackgroundPlayer(final Context context,
+                                              final PlayQueue queue,
+                                              final boolean resumePlayback,
+                                              final boolean startShuffled) {
         LoadingToast.show(context);
 
         final Intent intent = getPlayerIntent(context, PlayerService.class, queue,
                 PlayerIntentType.AllOthers)
                 .putExtra(Player.PLAYER_TYPE, PlayerType.AUDIO)
-                .putExtra(Player.RESUME_PLAYBACK, resumePlayback);
+                .putExtra(Player.RESUME_PLAYBACK, resumePlayback)
+                .putExtra(Player.START_SHUFFLED, startShuffled);
         ContextCompat.startForegroundService(context, intent);
     }
 

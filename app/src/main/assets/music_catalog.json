@@ -2,7 +2,7 @@
   "title": "Iradu resso",
   "featured": ["top-brasil", "top-global", "viral-hits", "lancamentos"],
   "genrePlaylists": ["top-brasil", "top-global", "viral-hits", "lancamentos", "indie", "rock", "hip-hop", "k-pop", "sertanejo", "gospel"],
-  "moodPlaylists": ["relax", "happy", "workout", "party", "focus", "romantic", "sad", "road-trip", "sleep"],
+  "moodPlaylists": ["relax", "happy", "workout", "party", "focus", "romantic", "sad", "road-trip", "sleep", "energized", "chill", "nostalgic", "confidence", "rainy-day"],
   "automaticPlaylists": ["daily-mix", "descobertas-da-semana", "novidades-para-voce", "tocadas-recentemente", "favoritas"],
   "playlists": [
     {
@@ -250,6 +250,71 @@
         {"title": "Let Her Go", "artist": "Passenger", "album": "All The Little Lights", "duration": "4:15", "youtubeId": "RBumgq5yVrA"},
         {"title": "Say You Won't Let Go", "artist": "James Arthur", "album": "Back from the Edge", "duration": "3:31", "youtubeId": "0yW7w8F2TVA"},
         {"title": "Chasing Cars", "artist": "Snow Patrol", "album": "Eyes Open", "duration": "4:28", "youtubeId": "GemKqzILV4w"}
+      ]
+    },
+    {
+      "slug": "energized",
+      "title": "Energia",
+      "subtitle": "Música para levantar o ritmo",
+      "description": "Hits animados para começar o dia e seguir em movimento.",
+      "accentColor": "#FF8A00",
+      "songs": [
+        {"title": "Can't Hold Us", "artist": "Macklemore & Ryan Lewis", "album": "The Heist", "duration": "4:18", "youtubeId": "2zNSgSzhBfM"},
+        {"title": "On Top of the World", "artist": "Imagine Dragons", "album": "Night Visions", "duration": "3:12", "youtubeId": "w5tWYmIOWGk"},
+        {"title": "Good Time", "artist": "Owl City & Carly Rae Jepsen", "album": "The Midsummer Station", "duration": "3:26", "youtubeId": "H7HmzwI67ec"},
+        {"title": "I Ain't Worried", "artist": "OneRepublic", "album": "Top Gun: Maverick", "duration": "2:28", "youtubeId": "mNEUkkoUoIA"}
+      ]
+    },
+    {
+      "slug": "chill",
+      "title": "De Boa",
+      "subtitle": "Sons leves para desacelerar",
+      "description": "Canções tranquilas para relaxar sem pressa.",
+      "accentColor": "#39B8B0",
+      "songs": [
+        {"title": "Sunset Lover", "artist": "Petit Biscuit", "album": "Presence", "duration": "3:58", "youtubeId": "4fQeM5a3o8"},
+        {"title": "Better Together", "artist": "Jack Johnson", "album": "In Between Dreams", "duration": "3:28", "youtubeId": "u57d4_b_YgI"},
+        {"title": "Put Your Records On", "artist": "Corinne Bailey Rae", "album": "Corinne Bailey Rae", "duration": "3:35", "youtubeId": "rjOhZZyn30k"},
+        {"title": "Banana Pancakes", "artist": "Jack Johnson", "album": "In Between Dreams", "duration": "3:12", "youtubeId": "OkyrIRyrRdY"}
+      ]
+    },
+    {
+      "slug": "nostalgic",
+      "title": "Nostalgia",
+      "subtitle": "Músicas que trazem lembranças",
+      "description": "Clássicos recentes para cantar junto e voltar no tempo.",
+      "accentColor": "#C883FF",
+      "songs": [
+        {"title": "Viva La Vida", "artist": "Coldplay", "album": "Viva la Vida", "duration": "4:02", "youtubeId": "dvgZkm1xWPE"},
+        {"title": "Somewhere Only We Know", "artist": "Keane", "album": "Hopes and Fears", "duration": "3:57", "youtubeId": "Oextk-If8HQ"},
+        {"title": "The Scientist", "artist": "Coldplay", "album": "A Rush of Blood to the Head", "duration": "5:09", "youtubeId": "RB-RcX5DS5A"},
+        {"title": "Use Somebody", "artist": "Kings of Leon", "album": "Only by the Night", "duration": "3:51", "youtubeId": "gnhXHvRoUd0"}
+      ]
+    },
+    {
+      "slug": "confidence",
+      "title": "Autoestima",
+      "subtitle": "Pra se sentir bem e confiante",
+      "description": "Refrões poderosos para recuperar a confiança e brilhar.",
+      "accentColor": "#FF5F8F",
+      "songs": [
+        {"title": "Roar", "artist": "Katy Perry", "album": "Prism", "duration": "3:43", "youtubeId": "CevxSJLk8"},
+        {"title": "Stronger (What Doesn't Kill You)", "artist": "Kelly Clarkson", "album": "Stronger", "duration": "3:41", "youtubeId": "Xn676-fLq7I"},
+        {"title": "Confident", "artist": "Demi Lovato", "album": "Confident", "duration": "3:25", "youtubeId": "c7XHe6mNL1w"},
+        {"title": "Firework", "artist": "Katy Perry", "album": "Teenage Dream", "duration": "3:48", "youtubeId": "QGJuMBdaqIw"}
+      ]
+    },
+    {
+      "slug": "rainy-day",
+      "title": "Dia de Chuva",
+      "subtitle": "Trilha para ficar na sua",
+      "description": "Faixas acolhedoras para dias cinzentos e momentos tranquilos.",
+      "accentColor": "#6589C8",
+      "songs": [
+        {"title": "Set Fire to the Rain", "artist": "Adele", "album": "21", "duration": "4:02", "youtubeId": "Ri7-vnrJD3k"},
+        {"title": "The A Team", "artist": "Ed Sheeran", "album": "+", "duration": "4:18", "youtubeId": "UAWcs5H-qgQ"},
+        {"title": "Skinny Love", "artist": "Birdy", "album": "Birdy", "duration": "3:22", "youtubeId": "aNzCDt2m2tY"},
+        {"title": "Let Her Go", "artist": "Passenger", "album": "All the Little Lights", "duration": "4:12", "youtubeId": "RBumgq5yVrA"}
       ]
     },
     {

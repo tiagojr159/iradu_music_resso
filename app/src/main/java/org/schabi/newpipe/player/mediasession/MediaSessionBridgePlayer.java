@@ -44,6 +44,37 @@ public final class MediaSessionBridgePlayer extends SimpleBasePlayer {
         invalidateState();
     }
 
+    @NonNull
+    public List<MediaItem> getCurrentMediaItems() {
+        final Player appPlayer = playerSupplier.get();
+        final PlayQueue queue = appPlayer == null ? null : appPlayer.getPlayQueue();
+        if (queue == null || queue.size() == 0) {
+            return List.of();
+        }
+
+        final List<MediaItem> items = new ArrayList<>();
+        for (int i = 0; i < queue.size(); i++) {
+            final PlayQueueItem item = queue.getItem(i);
+            final MediaMetadata metadata = new MediaMetadata.Builder()
+                    .setTitle(item.getTitle())
+                    .setArtist(item.getUploader())
+                    .setSubtitle(item.getUploader())
+                    .setIsPlayable(true)
+                    .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                    .build();
+            items.add(new MediaItem.Builder()
+                    .setMediaId(item.getServiceId() + ":" + item.getUrl())
+                    .setUri(item.getUrl())
+                    .setMediaMetadata(metadata)
+                    .build());
+        }
+        return items;
+    }
+
+    public long getCurrentPositionMs() {
+        return currentPosition(playerSupplier.get());
+    }
+
     @Override
     protected State getState() {
         final Player appPlayer = playerSupplier.get();
@@ -91,6 +122,16 @@ public final class MediaSessionBridgePlayer extends SimpleBasePlayer {
                         PositionSupplier.getConstant(totalBufferedDuration(appPlayer)));
 
         return builder.build();
+    }
+
+    @Override
+    protected ListenableFuture<?> handleSetMediaItems(final List<MediaItem> mediaItems,
+                                                       final int startIndex,
+                                                       final long startPositionMs) {
+        // PlayerService resolves and starts selections in its MediaLibrarySession callback.
+        // This bridge only mirrors that queue; applying the returned items again would be
+        // redundant, but the command must still complete instead of throwing from SimpleBasePlayer.
+        return Futures.immediateVoidFuture();
     }
 
     private int toMedia3PlaybackState(@Nullable final Player appPlayer) {

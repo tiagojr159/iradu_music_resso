@@ -50,7 +50,7 @@ import org.schabi.newpipe.util.image.ImageStrategy
 class MediaBrowserImpl(
     private val context: Context,
     // parentId
-    notifyChildrenChanged: Consumer<String>
+    private val notifyChildrenChanged: Consumer<String>
 ) {
     private val packageValidator = PackageValidator(context)
     private val database = NewPipeDatabase.getInstance(context)
@@ -87,6 +87,12 @@ class MediaBrowserImpl(
             return Single.just(getRootItem())
         }
         val path = mediaId.toUri().pathSegments
+        if (path.firstOrNull() == ID_CATALOG_SHUFFLE) {
+            return resolveCatalogShuffleItem(mediaId, path)
+        }
+        if (path.firstOrNull() == ID_CAR_SETTINGS) {
+            return resolveCarSettingItem(mediaId, path)
+        }
         if (path.firstOrNull() == ID_CATALOG) {
             return resolveCatalogItem(mediaId, path)
         }
@@ -136,7 +142,8 @@ class MediaBrowserImpl(
                 2 -> createCatalogPlaylistMediaItem(playlist)
 
                 3 -> {
-                    val index = path[2].toIntOrNull() ?: throw parseError(mediaId)
+                    val index = MusicCatalogRepository.resolveSongIndex(playlist, path[2])
+                    if (index < 0) throw parseError(mediaId)
                     val song = playlist.songs.getOrNull(index) ?: throw parseError(mediaId)
                     createCatalogSongMediaItem(playlist, song, index)
                 }
@@ -144,6 +151,32 @@ class MediaBrowserImpl(
                 else -> throw parseError(mediaId)
             }
         }.subscribeOn(Schedulers.io())
+    }
+
+    private fun resolveCatalogShuffleItem(mediaId: String, path: List<String>): Single<MediaItem> = Single.fromCallable {
+        val playlistSlug = path.getOrNull(1)?.takeIf { path.size == 2 }
+            ?: throw parseError(mediaId)
+        val playlist = catalogRepository.loadCatalog(context).getPlaylist(playlistSlug)
+            ?: throw parseError(mediaId)
+        createCatalogShuffleMediaItem(playlist)
+    }.subscribeOn(Schedulers.io())
+
+    private fun resolveCarSettingItem(mediaId: String, path: List<String>): Single<MediaItem> = Single.fromCallable {
+        val action = path.getOrNull(1)?.takeIf { path.size == 2 }
+            ?: throw parseError(mediaId)
+        createCarSettingItem(action)
+    }.subscribeOn(Schedulers.io())
+
+    fun getCarSettingAction(mediaId: String): String? {
+        val path = mediaId.toUri().pathSegments
+        return path.getOrNull(1)?.takeIf {
+            path.size == 2 && path.firstOrNull() == ID_CAR_SETTINGS &&
+                it in CAR_SETTING_ACTIONS
+        }
+    }
+
+    fun notifyCarSettingsChanged() {
+        notifyChildrenChanged.accept(ID_CAR_SETTINGS)
     }
 
     //region onLoadChildren
@@ -203,6 +236,11 @@ class MediaBrowserImpl(
                             ID_SEARCH,
                             "Busca",
                             R.drawable.ic_search
+                        ),
+                        createRootMediaItem(
+                            ID_CAR_SETTINGS,
+                            context.getString(R.string.resso_car_settings_title),
+                            R.drawable.ic_settings
                         )
                     )
                 )
@@ -281,6 +319,23 @@ class MediaBrowserImpl(
                     throw parseError(parentId)
                 }
 
+                ID_CATALOG_SHUFFLE -> {
+                    if (path.size != 1) throw parseError(parentId)
+                    return Single.just(
+                        listOf(
+                            createCatalogShuffleMediaItem(
+                                catalogRepository.loadCatalog(context).getPlaylist(path[0])
+                                    ?: throw parseError(parentId)
+                            )
+                        )
+                    )
+                }
+
+                ID_CAR_SETTINGS -> {
+                    if (path.isEmpty()) throw parseError(parentId)
+                    return Single.just(path.map(::createCarSettingItem))
+                }
+
                 ID_HISTORY -> return populateHistory()
 
                 else -> throw parseError(parentId)
@@ -355,6 +410,55 @@ class MediaBrowserImpl(
             .build()
     }
 
+    private fun createCatalogShuffleMediaItem(playlist: MusicPlaylist): MediaItem {
+        val iconUri = Uri.parse(
+            "android.resource://${context.packageName}/${R.drawable.ic_shuffle}"
+        )
+        return MediaItem.Builder()
+            .setMediaId(
+                buildMediaId().appendPath(ID_CATALOG_SHUFFLE).appendPath(playlist.slug)
+                    .build().toString()
+            )
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(context.getString(R.string.resso_car_shuffle_playlist))
+                    .setSubtitle(playlist.title)
+                    .setArtworkUri(iconUri)
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
+                    .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                    .build()
+            )
+            .build()
+    }
+
+    private fun createCarSettingItem(action: String): MediaItem {
+        val titleRes = when (action) {
+            ACTION_CAR_SHUFFLE -> R.string.resso_car_settings_shuffle
+            ACTION_CAR_REPEAT -> R.string.resso_car_settings_repeat
+            ACTION_CAR_ARTWORK -> R.string.resso_car_settings_artwork
+            else -> throw parseError(action)
+        }
+        val mediaId = buildMediaId().appendPath(ID_CAR_SETTINGS).appendPath(action).build()
+        return MediaItem.Builder()
+            .setMediaId(mediaId.toString())
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(context.getString(titleRes))
+                    .setSubtitle(context.getString(R.string.resso_car_settings_tap_to_toggle))
+                    .setArtworkUri(
+                        Uri.parse(
+                            "android.resource://${context.packageName}/${R.drawable.ic_settings}"
+                        )
+                    )
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
+                    .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+                    .build()
+            )
+            .build()
+    }
+
     private fun createCatalogSongMediaItem(
         playlist: MusicPlaylist,
         song: MusicSong,
@@ -363,7 +467,7 @@ class MediaBrowserImpl(
         val mediaId = buildMediaId()
             .appendPath(ID_CATALOG)
             .appendPath(playlist.slug)
-            .appendPath(index.toString())
+            .appendPath(song.youtubeId)
             .build().toString()
         return playableMediaItem(
             mediaId,
@@ -632,9 +736,10 @@ class MediaBrowserImpl(
         return Single.fromCallable {
             val playlist = catalogRepository.loadCatalog(context).getPlaylist(slug)
                 ?: throw parseError(slug)
-            playlist.songs.mapIndexed { index, song ->
-                createCatalogSongMediaItem(playlist, song, index)
-            }
+            listOf(createCatalogShuffleMediaItem(playlist)) +
+                playlist.songs.mapIndexed { index, song ->
+                    createCatalogSongMediaItem(playlist, song, index)
+                }
         }
     }
 
@@ -770,6 +875,16 @@ class MediaBrowserImpl(
 
     companion object {
         private val TAG: String = MediaBrowserImpl::class.java.getSimpleName()
+        private const val ID_CATALOG_SHUFFLE = "catalog_shuffle"
+        private const val ID_CAR_SETTINGS = "car_settings"
+        const val ACTION_CAR_SHUFFLE = "shuffle"
+        const val ACTION_CAR_REPEAT = "repeat_one"
+        const val ACTION_CAR_ARTWORK = "artwork"
+        private val CAR_SETTING_ACTIONS = setOf(
+            ACTION_CAR_SHUFFLE,
+            ACTION_CAR_REPEAT,
+            ACTION_CAR_ARTWORK
+        )
 
         fun imageUriOrNullIfDisabled(url: String?): Uri? {
             return if (ImageStrategy.shouldLoadImages()) {

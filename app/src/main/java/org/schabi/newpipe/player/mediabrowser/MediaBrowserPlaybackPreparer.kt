@@ -18,6 +18,7 @@ import org.schabi.newpipe.NewPipeDatabase
 import org.schabi.newpipe.R
 import org.schabi.newpipe.error.ErrorInfo
 import org.schabi.newpipe.extractor.InfoItem.InfoType
+import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.exceptions.ContentNotAvailableException
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -72,13 +73,19 @@ class MediaBrowserPlaybackPreparer(
         }
 
         disposable?.dispose()
+        val startShuffled = mediaId.toUri().pathSegments.firstOrNull() == ID_CATALOG_SHUFFLE
         disposable = extractPlayQueueFromMediaId(mediaId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { playQueue ->
                     clearMediaSessionError.run()
-                    NavigationHelper.playOnBackgroundPlayer(context, playQueue, playWhenReady)
+                    NavigationHelper.playOnBackgroundPlayer(
+                        context,
+                        playQueue,
+                        playWhenReady,
+                        startShuffled
+                    )
                 },
                 { throwable ->
                     Log.e(TAG, "Failed to start playback of media ID [$mediaId]", throwable)
@@ -109,7 +116,28 @@ class MediaBrowserPlaybackPreparer(
     }
 
     fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-        onUnsupportedError()
+        Log.i(TAG, "Preparing Android Auto playback from URI: $uri")
+        disposable?.dispose()
+        val serviceId = try {
+            NewPipe.getServiceByUrl(uri.toString()).serviceId
+        } catch (exception: Exception) {
+            Log.w(TAG, "Could not identify the service for URI [$uri]", exception)
+            ServiceHelper.getSelectedServiceId(context)
+        }
+        disposable = ExtractorHelper.getStreamInfo(context, serviceId, uri.toString(), false)
+            .map { SinglePlayQueue(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { playQueue ->
+                    clearMediaSessionError.run()
+                    NavigationHelper.playOnBackgroundPlayer(context, playQueue, playWhenReady)
+                },
+                { throwable ->
+                    Log.e(TAG, "Failed to start playback from URI [$uri]", throwable)
+                    onPrepareError(throwable)
+                }
+            )
     }
     //endregion
 
@@ -167,6 +195,8 @@ class MediaBrowserPlaybackPreparer(
                 )
 
                 ID_CATALOG -> extractCatalogPlayQueue(mediaId, path)
+
+                ID_CATALOG_SHUFFLE -> extractCatalogShufflePlayQueue(mediaId, path)
 
                 else -> throw parseError(mediaId)
             }
@@ -273,11 +303,26 @@ class MediaBrowserPlaybackPreparer(
         return Single.fromCallable {
             val playlist = catalogRepository.loadCatalog(context).getPlaylist(path[0])
                 ?: throw parseError(mediaId)
-            val index = path[1].toIntOrNull() ?: throw parseError(mediaId)
+            val index = MusicCatalogRepository.resolveSongIndex(playlist, path[1])
+            if (index < 0) throw parseError(mediaId)
             if (index !in playlist.songs.indices) {
                 throw parseError(mediaId)
             }
             InfiniteMusicPlayQueue(playlist, index)
+        }
+    }
+
+    private fun extractCatalogShufflePlayQueue(
+        mediaId: String,
+        path: List<String>
+    ): Single<PlayQueue> {
+        if (path.size != 1) {
+            return Single.error(parseError(mediaId))
+        }
+        return Single.fromCallable {
+            val playlist = catalogRepository.loadCatalog(context).getPlaylist(path[0])
+                ?: throw parseError(mediaId)
+            InfiniteMusicPlayQueue(playlist)
         }
     }
 
@@ -368,5 +413,6 @@ class MediaBrowserPlaybackPreparer(
 
     companion object {
         private val TAG = MediaBrowserPlaybackPreparer::class.simpleName
+        private const val ID_CATALOG_SHUFFLE = "catalog_shuffle"
     }
 }

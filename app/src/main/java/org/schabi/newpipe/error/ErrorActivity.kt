@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter
 import org.schabi.newpipe.BuildConfig
 import org.schabi.newpipe.R
 import org.schabi.newpipe.databinding.ActivityErrorBinding
+import org.schabi.newpipe.util.AppLog
 import org.schabi.newpipe.util.Localization
 import org.schabi.newpipe.util.ThemeHelper
 import org.schabi.newpipe.util.external_communication.ShareUtils
@@ -81,6 +82,13 @@ class ErrorActivity : AppCompatActivity() {
         }
 
         errorInfo = IntentCompat.getParcelableExtra(intent, ERROR_INFO, ErrorInfo::class.java)!!
+        errorInfo.stackTraces.forEach { trace ->
+            AppLog.record(
+                this,
+                "Relatório de erro",
+                "Falha exibida na tela de relatório (${errorInfo.userAction.message})\n$trace"
+            )
+        }
 
         // important add guru meditation
         addGuruMeditation()

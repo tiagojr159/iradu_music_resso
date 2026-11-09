@@ -2,8 +2,6 @@ package org.schabi.newpipe.player.playqueue;
 
 import androidx.annotation.NonNull;
 
-import org.schabi.newpipe.extractor.Image;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.music.MusicCatalogRepository;
 
 import java.util.List;
@@ -78,14 +76,7 @@ public final class InfiniteMusicPlayQueue extends PlayQueue {
     @NonNull
     private static PlayQueueItem toQueueItem(
             @NonNull final MusicCatalogRepository.MusicSong song) {
-        final StreamInfoItem item = new StreamInfoItem(song.serviceId, song.getUrl(),
-                song.title, song.streamType);
-        item.setUploaderName(song.artist);
-        item.setUploaderUrl("");
-        item.setDuration(parseDurationSeconds(song.duration));
-        item.setThumbnails(List.of(new Image(song.getThumbnailUrl(), 720, 1280,
-                Image.ResolutionLevel.HIGH)));
-        return new PlayQueueItem(item);
+        return new MusicCatalogPlayQueueItem(song);
     }
 
     private static long parseDurationSeconds(@NonNull final String duration) {

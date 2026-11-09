@@ -48,7 +48,7 @@ public final class RessoExploreFragment extends BaseMusicCatalogFragment {
             addSquareCards(rootView.findViewById(R.id.resso_top_brasil_row),
                     findPlaylists(catalog.featured, 0, 4));
             addSquareCards(rootView.findViewById(R.id.resso_moods_row),
-                    findPlaylists(catalog.moodPlaylists, 0, 6));
+                    catalog.moodPlaylists);
             addWideCards(rootView.findViewById(R.id.resso_auto_row),
                     findPlaylists(catalog.automaticPlaylists, 0, 5));
         } catch (final Throwable e) {

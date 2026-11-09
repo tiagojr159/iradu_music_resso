@@ -44,11 +44,12 @@ public final class MusicCatalogRepository {
     private static final String CACHE_FILE = "music_catalog_cache.json";
     private static final String CACHE_UPDATED_AT_KEY = "music_catalog_cache_updated_at";
     private static final String CACHE_LAST_ATTEMPT_KEY = "music_catalog_refresh_last_attempt";
+    private static final String CACHE_QUERY_CYCLE_KEY = "music_catalog_refresh_query_cycle";
     private static final String CACHE_VERSION_KEY = "music_catalog_cache_version";
     private static final String LAST_CHANGED_TRACK_COUNT_KEY = "music_catalog_changed_track_count";
     private static final long WEEK_MS = 7L * 24L * 60L * 60L * 1000L;
     private static final long RETRY_DELAY_MS = 6L * 60L * 60L * 1000L;
-    private static final int CACHE_VERSION = 2;
+    private static final int CACHE_VERSION = 3;
     private static final int MAX_REFRESHED_SONGS = 12;
     private static final int DEFAULT_SERVICE_ID = ServiceList.YouTube.getServiceId();
     private static final List<String> WEEKLY_PLAYLIST_SLUGS = List.of(
@@ -69,14 +70,81 @@ public final class MusicCatalogRepository {
         final SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(context);
         final File cacheFile = new File(context.getFilesDir(), CACHE_FILE);
-        if (!cacheFile.exists()
-                || preferences.getInt(CACHE_VERSION_KEY, 0) < CACHE_VERSION) {
+        if (!cacheFile.exists()) {
             copyAssetToFile(context, cacheFile);
             preferences.edit()
                     .putInt(CACHE_VERSION_KEY, CACHE_VERSION)
                     .apply();
+        } else if (preferences.getInt(CACHE_VERSION_KEY, 0) < CACHE_VERSION) {
+            mergeBundledCatalog(context, cacheFile);
+            preferences.edit().putInt(CACHE_VERSION_KEY, CACHE_VERSION).apply();
         }
         return cacheFile;
+    }
+
+    private void mergeBundledCatalog(@NonNull final Context context,
+                                     @NonNull final File cacheFile) throws IOException {
+        try {
+            final JSONObject cached = new JSONObject(readFile(cacheFile));
+            final JSONObject bundled = new JSONObject(readAsset(context));
+            final JSONArray cachedPlaylists = cached.optJSONArray("playlists");
+            final JSONArray bundledPlaylists = bundled.optJSONArray("playlists");
+            if (cachedPlaylists == null || bundledPlaylists == null) {
+                copyAssetToFile(context, cacheFile);
+                return;
+            }
+
+            final Set<String> existingSlugs = new HashSet<>();
+            for (int i = 0; i < cachedPlaylists.length(); i++) {
+                final JSONObject playlist = cachedPlaylists.optJSONObject(i);
+                if (playlist != null) {
+                    existingSlugs.add(playlist.optString("slug"));
+                }
+            }
+            for (int i = 0; i < bundledPlaylists.length(); i++) {
+                final JSONObject playlist = bundledPlaylists.optJSONObject(i);
+                if (playlist != null && existingSlugs.add(playlist.optString("slug"))) {
+                    cachedPlaylists.put(playlist);
+                }
+            }
+            for (final String category : List.of(
+                    "featured", "genrePlaylists", "moodPlaylists", "automaticPlaylists")) {
+                final JSONArray bundledSlugs = bundled.optJSONArray(category);
+                if (bundledSlugs == null) {
+                    continue;
+                }
+                final JSONArray cachedSlugs = cached.optJSONArray(category) == null
+                        ? new JSONArray() : cached.optJSONArray(category);
+                final Set<String> existing = new HashSet<>();
+                for (int i = 0; i < cachedSlugs.length(); i++) {
+                    existing.add(cachedSlugs.optString(i));
+                }
+                for (int i = 0; i < bundledSlugs.length(); i++) {
+                    final String slug = bundledSlugs.optString(i);
+                    if (existing.add(slug)) {
+                        cachedSlugs.put(slug);
+                    }
+                }
+                cached.put(category, cachedSlugs);
+            }
+            try (FileOutputStream output = new FileOutputStream(cacheFile, false)) {
+                output.write(cached.toString(2).getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (final JSONException e) {
+            throw new IOException("Invalid music catalog during cache migration", e);
+        }
+    }
+
+    private String readAsset(@NonNull final Context context) throws IOException {
+        try (var inputStream = context.getAssets().open(ASSET_FILE)) {
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            final byte[] buffer = new byte[8192];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            return new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
+        }
     }
 
     public static boolean isWeeklyRefreshDue(@NonNull final Context context) {
@@ -103,7 +171,11 @@ public final class MusicCatalogRepository {
         final Context appContext = context.getApplicationContext();
         final SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(appContext);
-        preferences.edit().putLong(CACHE_LAST_ATTEMPT_KEY, System.currentTimeMillis()).apply();
+        final int queryCycle = preferences.getInt(CACHE_QUERY_CYCLE_KEY, 0);
+        preferences.edit()
+                .putLong(CACHE_LAST_ATTEMPT_KEY, System.currentTimeMillis())
+                .putInt(CACHE_QUERY_CYCLE_KEY, queryCycle + 1)
+                .apply();
 
         return Single.fromCallable(() -> {
                     final File cacheFile = ensureCacheFile(appContext);
@@ -112,7 +184,7 @@ public final class MusicCatalogRepository {
                 .flatMap(root -> {
                     final int[] successfulUpdates = {0};
                     return Observable.fromIterable(WEEKLY_PLAYLIST_SLUGS)
-                        .concatMapSingle(slug -> fetchPlaylistUpdate(root, slug)
+                        .concatMapSingle(slug -> fetchPlaylistUpdate(root, slug, queryCycle)
                                 .onErrorReturn(error -> new PlaylistUpdate(slug, new JSONArray())))
                         .collect(() -> root, (catalogJson, update) -> {
                             if (update.songs.length() == 0) {
@@ -156,7 +228,8 @@ public final class MusicCatalogRepository {
 
     private Single<PlaylistUpdate> fetchPlaylistUpdate(
             @NonNull final JSONObject catalogJson,
-            @NonNull final String slug) throws JSONException {
+            @NonNull final String slug,
+            final int queryCycle) throws JSONException {
         final JSONObject playlistJson = findPlaylistJson(catalogJson, slug);
         if (playlistJson == null) {
             return Single.just(new PlaylistUpdate(slug, new JSONArray()));
@@ -166,7 +239,33 @@ public final class MusicCatalogRepository {
             return Single.just(new PlaylistUpdate(slug, new JSONArray()));
         }
 
-        return ExtractorHelper.searchFor(DEFAULT_SERVICE_ID, queries.get(0),
+        final List<String> rotatedQueries = new ArrayList<>(queries.size());
+        final int firstQuery = Math.floorMod(queryCycle, queries.size());
+        for (int offset = 0; offset < queries.size(); offset++) {
+            rotatedQueries.add(queries.get((firstQuery + offset) % queries.size()));
+        }
+
+        return Observable.fromIterable(rotatedQueries)
+                .concatMapSingle(query -> fetchPlaylistUpdateForQuery(slug, query)
+                        .onErrorReturn(error -> new PlaylistUpdate(slug, new JSONArray())))
+                .filter(update -> update.songs.length() > 0)
+                .toList()
+                .map(updates -> {
+                    PlaylistUpdate lastUpdate = new PlaylistUpdate(slug, new JSONArray());
+                    for (final PlaylistUpdate update : updates) {
+                        lastUpdate = update;
+                        if (hasDifferentTracks(playlistJson, update.songs)) {
+                            return update;
+                        }
+                    }
+                    return lastUpdate;
+                });
+    }
+
+    private Single<PlaylistUpdate> fetchPlaylistUpdateForQuery(
+            @NonNull final String slug,
+            @NonNull final String query) {
+        return ExtractorHelper.searchFor(DEFAULT_SERVICE_ID, query,
                         List.of(YoutubeSearchQueryHandlerFactory.MUSIC_SONGS), "")
                 .map(searchInfo -> {
                     final JSONArray songs = new JSONArray();
@@ -192,6 +291,26 @@ public final class MusicCatalogRepository {
                     }
                     return new PlaylistUpdate(slug, songs);
                 });
+    }
+
+    private boolean hasDifferentTracks(@NonNull final JSONObject playlistJson,
+                                       @NonNull final JSONArray candidateSongs) {
+        final JSONArray currentSongs = playlistJson.optJSONArray("songs");
+        final int currentCount = currentSongs == null ? 0 : currentSongs.length();
+        if (currentCount != candidateSongs.length()) {
+            return true;
+        }
+        for (int index = 0; index < currentCount; index++) {
+            final JSONObject currentSong = currentSongs.optJSONObject(index);
+            final JSONObject candidateSong = candidateSongs.optJSONObject(index);
+            final String currentId = currentSong == null ? "" : currentSong.optString("youtubeId");
+            final String candidateId = candidateSong == null
+                    ? "" : candidateSong.optString("youtubeId");
+            if (!currentId.equals(candidateId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Nullable
@@ -381,6 +500,30 @@ public final class MusicCatalogRepository {
 
         final int normalized = index % size;
         return normalized < 0 ? normalized + size : normalized;
+    }
+
+    /**
+     * Resolves both legacy positional IDs and stable YouTube IDs used by car media clients.
+     * @param playlist catalog playlist to search
+     * @param songKey legacy playlist index or stable YouTube ID
+     * @return the current playlist index, or -1 when the song is no longer present
+     */
+    public static int resolveSongIndex(@NonNull final MusicPlaylist playlist,
+                                       @NonNull final String songKey) {
+        try {
+            final int legacyIndex = Integer.parseInt(songKey);
+            if (legacyIndex >= 0 && legacyIndex < playlist.songs.size()) {
+                return legacyIndex;
+            }
+        } catch (final NumberFormatException ignored) {
+            // New IDs use the stable YouTube ID so catalog refreshes cannot shift selections.
+        }
+        for (int index = 0; index < playlist.songs.size(); index++) {
+            if (playlist.songs.get(index).youtubeId.equals(songKey)) {
+                return index;
+            }
+        }
+        return -1;
     }
 
     @NonNull

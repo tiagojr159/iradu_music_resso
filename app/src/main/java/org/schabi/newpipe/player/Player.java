@@ -180,6 +180,7 @@ public final class Player implements PlaybackListener, Listener {
     public static final String PLAY_QUEUE_KEY = "play_queue_key";
     public static final String RESUME_PLAYBACK = "resume_playback";
     public static final String PLAY_WHEN_READY = "play_when_ready";
+    public static final String START_SHUFFLED = "start_shuffled";
     public static final String PLAYER_TYPE = "player_type";
     public static final String PLAYER_INTENT_TYPE = "player_intent_type";
     public static final String PLAYER_INTENT_DATA = "player_intent_data";
@@ -602,6 +603,10 @@ public final class Player implements PlaybackListener, Listener {
             // Good to go...
             // In a case of equal PlayQueues we can re-init old one but only when it is disposed
             initPlayback(samePlayQueue ? playQueue : newQueue, playWhenReady);
+        }
+
+        if (intent.getBooleanExtra(START_SHUFFLED, false)) {
+            setShuffleModeEnabled(true);
         }
 
     }

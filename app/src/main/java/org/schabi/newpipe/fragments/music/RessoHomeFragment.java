@@ -147,7 +147,7 @@ public final class RessoHomeFragment extends BaseMusicCatalogFragment {
                 catalog.automaticPlaylists.subList(0,
                         Math.min(4, catalog.automaticPlaylists.size())));
         addSquareCards(rootView.findViewById(R.id.resso_playlists_row),
-                catalog.moodPlaylists.subList(0, Math.min(6, catalog.moodPlaylists.size())));
+                catalog.moodPlaylists);
         addSquareCards(rootView.findViewById(R.id.resso_charts_row),
                 catalog.featured.subList(0, Math.min(4, catalog.featured.size())));
         loadSavedPlaylistsRow(rootView.findViewById(R.id.resso_my_playlists_row));

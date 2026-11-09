@@ -12,6 +12,14 @@
         app:singleLineTitle="false"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        android:fragment="org.schabi.newpipe.settings.ErrorLogSettingsFragment"
+        android:icon="@drawable/ic_bug_report"
+        android:key="@string/resso_diagnostic_logs_key"
+        android:summary="@string/resso_diagnostic_logs_summary"
+        android:title="@string/resso_diagnostic_logs_title"
+        app:iconSpaceReserved="false" />
+
     <PreferenceScreen
         android:fragment="org.schabi.newpipe.settings.VideoAudioSettingsFragment"
         android:icon="@drawable/ic_headset"
